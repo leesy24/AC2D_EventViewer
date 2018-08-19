@@ -1,0 +1,5 @@
+Relay_Index,Relay_Name,Indicator_Screen_Center_X,Indicator_Screen_Top_Y,Idicator_Text_Height
+0,Fault North,382,8,18
+1,Alert North,202,8,18
+2,Fault South,642,8,18
+3,Alert South,822,8,18

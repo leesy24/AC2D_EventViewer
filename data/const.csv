@@ -1,0 +1,63 @@
+Name,Value,Comment
+SYSTEM_PASSWORD,0000,4-Digits system password to configure settings
+SYSTEM_UI_TIMEOUT,60,Timeout value for UI displaying in seconds
+FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
+PS_DATA_SAVE_ALWAYS_DURATION,1,Time duration of received PS data keep in hours to save on disk.
+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,2000,Default time duration of event PS data keep in milli-seconds to save on disk.
+PS_DATA_SAVE_EVENTS_DURATION_LIMIT,30000,Limit time duration of event PS data keep in milli-seconds to save on disk.
+ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
+ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX,15000,Maximum distance of points to detect one object ROI.(5000=50cm=0.5meter)
+ROI_OBJECT_DETECT_DIAMETER_MIN,2000,Minimum diameter of object to detect the object ROI.(2000=20cm=0.2meter)
+ROI_OBJECT_DETECT_TIME_MIN,1000,Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)
+ROI_OBJECT_DETECT_KEEP_TIME,2000,Keeping time for disappearance object to detect object ROI later.(unit is milli-seconds)
+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
+Relay_Module_UART_port_name,NA,UART port name of Relay module.
+Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
+Relay_Module_UART_parity,N,UART parity of Relay module.
+Relay_Module_UART_data_bits,8,UART baud rate of Relay module.
+Relay_Module_UART_stop_bits,1.0,UART stop bits of Relay module.
+RELAY_MODULE_UART_REPLY_REQUEST_ENABLED,false,Reply data request of Relay moudle version 1.10.
+C_RELAY_MODULE_INDICATOR_OFF_FILL,40000000,Color of fill of relay indicator box. Color data format is AARRGGBB
+C_RELAY_MODULE_INDICATOR_OFF_STROKE,FF404040,Color of stroke of relay indicator box and text. Color data format is AARRGGBB
+SCREEN_BORDER_WIDTH,4,Border width of window of Windows. default = 8
+SCREEN_TITLE_HEIGHT,27,Title height of window of Windows. default = 31
+SCREEN_X_OFFSET,1,Adjuest X offset of window of Windows. default = 3
+SCREEN_Y_OFFSET,1,Adjuest Y offset of window of Windows. default = 5
+C_BG,FF080808,Background color. Color data format is AARRGGBB
+C_VERSION_DATE_TEXT,FFFFFFFF,Color of version and date text. Color data format is AARRGGBB
+C_PS_DATA_ERR_TEXT,FFFFFFFF,Error text color. Color data format is AARRGGBB
+C_UI_NUM_PAD_NORMAL,A0000000,Color of normal button of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_HIGHLIGHT,A0404040,Color of highlighted button of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_TEXT,A0FFFFFF,Color of text of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_BOX,A0FFFFFF,Color of button box of number pad. Color data format is AARRGGBB
+W_UI_NUM_PAD_BOX,1,Weight of border lines of number pad.
+C_BUBBLE_INFO_RECT_FILL,C0080808,Bubble info box fill color. Color data format is AARRGGBB
+C_BUBBLE_INFO_RECT_STROKE,FFFFFFFF,Bubble info box border color. Color data format is AARRGGBB
+C_BUBBLE_INFO_TEXT,FFFFFFFF,Bubble infor box text color. Color data format is AARRGGBB
+C_UI_BUTTONS_NORMAL,FF000000,Button normal background color. Color data format is AARRGGBB
+C_UI_BUTTONS_HIGHLIGHT,FF404040,Button highlight background color. Color data format is AARRGGBB
+C_UI_BUTTONS_TEXT,FFFFFFFF,Button text color. Color data format is AARRGGBB
+C_UI_BUTTONS_BOX,FFFFFFFF,Button box color. Color data format is AARRGGBB
+W_UI_BUTTONS_BOX,1,Button box weight.
+C_PS_DATA_LINE,FF0000FF,Scan points line default color. Color data format is AARRGGBB
+C_PS_DATA_POINT,FFFF0000,Scan point default color. Color data format is AARRGGBB
+W_PS_DATA_LINE,1,Scan line and point default weight.
+C_PS_DATA_RECT_FILL,C0080808,Scan info box fill color. Color data format is AARRGGBB
+C_PS_DATA_RECT_STROKE,FFFFFFFF,Scan info box border color. Color data format is AARRGGBB
+W_PS_DATA_RECT_STROKE,1,Scan info box border line weight.
+C_PS_DATA_RECT_TEXT,FFC0C0C0,Scan info box text color. Color data format is AARRGGBB
+C_GRID_LINE,FF404040,Grid line color. Color data format is AARRGGBB
+W_GRID_LINE,1,Grid line weight.
+C_GRID_TEXT,FFC0C0C0,Grid text color. Color data format is AARRGGBB
+C_MESSAGE_BOX_FILL,C0000000,Color of fill of message box. Color data format is AARRGGBB
+C_MESSAGE_BOX_TEXT,C0FFFFFF,Color of text of message box. Color data format is AARRGGBB
+C_MESSAGE_BOX_RECT,C0FFFFFF,Color of rect of message box. Color data format is AARRGGBB
+W_MESSAGE_BOX_RECT,1,Weight of rect lines of message box.
+C_UI_INTERFACES_TEXT,FFFFFFFF,Interface menu text color. Color data format is AARRGGBB
+C_UI_INTERFACES_FILL_NORMAL,FF000000,Interface menu fill color. Color data format is AARRGGBB
+C_UI_INTERFACES_FILL_HIGHLIGHT,FF404040,Interface menu hightlight color. Color data format is AARRGGBB
+C_UI_INTERFACES_BORDER_ACTIVE,FFFF0000,Interface menu border active color. Color data format is AARRGGBB
+C_UI_INTERFACES_BORDER_NORMAL,FFFFFFFF,Interface menu border normal color. Color data format is AARRGGBB
+C_UI_INTERFACES_CURSOR,FF00FF00,Interface menu cursor color. Color data format is AARRGGBB
+C_BG_IMAGE_LINE,FFFFFFFF,Line color of background image lines. Color data format is AARRGGBB
+W_BG_IMAGE_LINE,3,Line weight of background image lines.

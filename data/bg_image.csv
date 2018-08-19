@@ -1,0 +1,9 @@
+X,Y,Weight,Color,:Unit is coordinate x and y of screen,Color format is AARRGGBB(ex. FF000000 = opaque Black
+472,30,20,FFC0C0C0
+552,30,20,FFC0C0C0
+CUT
+512,30,20,FFC0C0C0
+512,570,20,FFC0C0C0
+CUT
+472,570,20,FFC0C0C0
+552,570,20,FFC0C0C0
