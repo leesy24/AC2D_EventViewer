@@ -408,6 +408,7 @@ class PS_Data {
       }
       // No mean in FILE interface.
       load_take_time[instance] = -1;
+      file_name[instance] = Interfaces_File_handle.get_file_name(instance);
     }
     else if (PS_Interface[instance] == PS_Interface_None) {
       // No mean in None interface.

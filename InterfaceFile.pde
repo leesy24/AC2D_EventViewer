@@ -89,6 +89,7 @@ class Interfaces_File {
   String[][] file_name_list = new String[PS_INSTANCE_MAX][];
   int[] file_name_index = new int[PS_INSTANCE_MAX];
   String[] dir_name = new String[PS_INSTANCE_MAX];
+  String[] load_file_name = new String[PS_INSTANCE_MAX];
   long[] file_time_stamp = new long[PS_INSTANCE_MAX];
   long[] base_time_stamp = new long[PS_INSTANCE_MAX];
   boolean[] reached_eofl = new boolean[PS_INSTANCE_MAX];
@@ -165,6 +166,7 @@ class Interfaces_File {
       this.file_name_index[instance] = 0;
       this.dir_name[instance] = sketchPath();
     }
+    this.load_file_name[instance] = "";
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":dir_name["+instance+"]="+dir_name[instance]);
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":file_name_list["+instance+"][0]="+this.file_name_list[instance][0]);
     this.eofl_reset_count[instance] = -1;
@@ -204,8 +206,8 @@ class Interfaces_File {
 
   public String get_file_name(int instance)
   {
-    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_GET_DBG) println("Interfaces_File:get_file_name("+instance+"):file_name_list="+file_name_list[instance][file_name_index[instance]]);
-    return file_name_list[instance][file_name_index[instance]];
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_GET_DBG) println("Interfaces_File:get_file_name("+instance+"):Enter");
+    return load_file_name[instance];
   }
 
   public boolean load(int instance)
@@ -260,6 +262,7 @@ class Interfaces_File {
       SYSTEM_logger.severe("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     }
+    load_file_name[instance] = file_name_list[instance][file_name_index[instance]];
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("buf.length = " + PS_Data_buf[instance].length);
     // Check binary buf length is valid.
     // Must larger than Function code(4B) + Length(4B) + Number of parameters(4B) + Number of points(4B) + CRC(4B).
