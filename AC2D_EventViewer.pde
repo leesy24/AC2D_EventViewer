@@ -133,7 +133,6 @@ void setup() {
 
   Config_setup();
   Screen_setup();
-  Update_Data_Files_setup();
   BG_Image_setup();
   Grid_setup();
   PS_Data_setup();
@@ -245,15 +244,6 @@ void draw() {
   UI_System_Config_draw();
   UI_Regions_Config_draw();
   Notice_Messages_draw();
-
-  Update_Data_Files_check();
-
-// Disk Space free will run as threads on Disk Space feature.
-/*
-  File_Operations_free();
-
-  Dbg_Time_logs_handle.add("File_Operations_free()");
-*/
 
   Version_Date_draw();
 } 
