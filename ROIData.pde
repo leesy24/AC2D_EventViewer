@@ -336,8 +336,6 @@ class ROI_Data {
 
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects_new.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
 
-      int distance_min = MAX_INT;
-      ROI_Object_Data object_last_distance_min = null;
       // Find nearest object of objects_last.
       for (ROI_Object_Data object_last:objects_last[instance]) {
         int distance =
@@ -348,37 +346,33 @@ class ROI_Data {
             object_last.mi_center_y);
         // Check distance of object_new and object_last is near.
         if (distance > ((object_new.mi_diameter + ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX * 2) / 2)
-            ||
+            &&
             distance > ((object_last.mi_diameter + ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX * 2) / 2)) {
           continue;
         }
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_last["+objects_last[instance].indexOf(object_last)+"]:"+"overlapped");
 
-        // Check distance of object_new and object_last is min.
-        if (distance >= distance_min) {
+        if (object_last.appeared_time_start < object_new.appeared_time_start) {
+          object_new.appeared_time_start = object_last.appeared_time_start;
+        }
+
+        // Check object_last and object_new are big enough.
+        if (!object_last.big_enough || !object_new.big_enough) {
           continue;
         }
-        distance_min = distance;
-        object_last_distance_min = object_last;
-      } // End of for (ROI_Object_Data object_last:objects_last[instance])
+        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_last.detected_time_start="+object_last.detected_time_start+":object_last="+object_last);
+        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_start ="+object_new.detected_time_start+":object_new="+object_new);
 
-      if (object_last_distance_min != null) {
-        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.appeared_time_start ="+object_new.appeared_time_start+":object_new="+object_new);
-
-        object_new.appeared_time_start = object_last_distance_min.appeared_time_start;
-
-        // Check object_last_distance_min and object_new are big enough.
-        if (object_last_distance_min.big_enough && object_new.big_enough) {
-          if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_last_distance_min.detected_time_start="+object_last_distance_min.detected_time_start+":object_last_distance_min="+object_last_distance_min);
-          if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_start ="+object_new.detected_time_start+":object_new="+object_new);
-
-          object_new.detected_time_start = object_last_distance_min.detected_time_start;
-
-          if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last  ="+object_new.detected_time_last+":object_new="+object_new);
-
-          object_last_distance_min.reused = true;
+        if (object_last.detected_time_start < object_new.detected_time_start) {
+          object_new.detected_time_start = object_last.detected_time_start;
         }
-      } // End of if (object_last_distance_min != null)
+
+        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last  ="+object_new.detected_time_last+":object_new="+object_new);
+
+        object_last.reused = true;
+
+        //object_last.reused = true;
+      } // End of for (ROI_Object_Data object_last:objects_last[instance])
     } // End of for (ROI_Object_Data object_new:objects_new)
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 1");
 
