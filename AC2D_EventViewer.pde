@@ -32,8 +32,9 @@ static boolean OS_is_Others = false;
 
 static String DATA_DIR_FULL_NAME = null;
 
-static String EVENT_VERSION_NUMBER = "Unknown";
-static String EVENT_RELEASE_DATE = "Unknown";
+// Initial strings for empty string.
+static String EVENT_VERSION_NUMBER = "1.00.14";
+static String EVENT_RELEASE_DATE = "2018-08-16";
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
