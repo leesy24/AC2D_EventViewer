@@ -174,9 +174,6 @@ void setup() {
 //  and should never be called explicitly.
 // All Processing programs update the screen at the end of draw(), never earlier.
 void draw() {
-  Dbg_Time_logs_handle.start("Main:draw():", 200, true);
-  //Dbg_Time_logs_handle.start("Main:draw():", FRAME_TIME);
-
   // Ready to draw from here!
   // To clear the display window at the beginning of each frame,
   background(C_BG);
@@ -207,72 +204,49 @@ void draw() {
     UI_Interfaces_update();
     UI_Regions_Config_update();
   }
-  Dbg_Time_logs_handle.add("Screen_check_update()");
 
   Grid_draw_lines();
-  Dbg_Time_logs_handle.add("Grid_draw_lines()");
   BG_Image_draw();
-  Dbg_Time_logs_handle.add("BG_Image_draw()");
   Regions_draw();
-  Dbg_Time_logs_handle.add("Regions_draw()");
   Grid_draw_texts();
-  Dbg_Time_logs_handle.add("Grid_draw_texts()");
   PS_Image_draw();
-  Dbg_Time_logs_handle.add("PS_Image_draw()");
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     //if (PS_Interface[i] == PS_Interface_None) continue;
     if (PS_Data_handle.load(i) == true) {
-      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):true");
       if (PS_Data_handle.parse(i) == false) {
-        Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+"):false");
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
           ROI_Data_setup();
           PS_Data_setup();
         }
       }
       else {
-        Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+"):true");
       }
     }
     else {
-      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):false");
     }
     PS_Data_handle.draw_points(i);
-    Dbg_Time_logs_handle.add("PS_Data_handle.draw_points("+i+")");
     ROI_Data_handle.detect_objects(i);
-    Dbg_Time_logs_handle.add("ROI_Data_handle.detect_objects("+i+")");
     ROI_Data_handle.draw_objects(i);
-    Dbg_Time_logs_handle.add("ROI_Data_handle.draw_objects("+i+")");
   }
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     PS_Data_handle.draw_params(i);
-    Dbg_Time_logs_handle.add("PS_Data_handle.draw_params("+i+")");
     ROI_Data_handle.draw_object_info(i);
-    Dbg_Time_logs_handle.add("ROI_Data_handle.draw_object_info("+i+")");
   }
 
   Relay_Module_output();
-  Dbg_Time_logs_handle.add("Relay_Module_output()");
 
   UI_Buttons_draw();
-  Dbg_Time_logs_handle.add("UI_Buttons_draw()");
   Bubble_Info_draw();
-  Dbg_Time_logs_handle.add("Bubble_Info_draw()");
   UI_Interfaces_draw();
-  Dbg_Time_logs_handle.add("UI_Interfaces_draw()");
   UI_System_Config_draw();
-  Dbg_Time_logs_handle.add("UI_System_Config_draw()");
   UI_Regions_Config_draw();
-  Dbg_Time_logs_handle.add("UI_Regions_Config_draw()");
   Notice_Messages_draw();
-  Dbg_Time_logs_handle.add("Notice_Messages_draw()");
 
   Update_Data_Files_check();
-  Dbg_Time_logs_handle.add("Update_Data_Files_check()");
 
 // Disk Space free will run as threads on Disk Space feature.
 /*
@@ -282,16 +256,6 @@ void draw() {
 */
 
   Version_Date_draw();
-  Dbg_Time_logs_handle.add("Version_Date_draw()");
-
-  // Check main loop time.
-  if (Dbg_Time_logs_handle.get_start_millis_diff() > 1000)
-  {
-    if (PRINT_ERR) println("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
-    SYSTEM_logger.severe("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
-    // Need to call gc() to free memory.
-    System.gc();
-  }
 } 
 
 void Notice_Messages_draw()
