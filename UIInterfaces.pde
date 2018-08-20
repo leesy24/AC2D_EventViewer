@@ -193,6 +193,7 @@ void UI_Interfaces_update_instance(int instance)
     .addItems(UI_Interfaces_str_array)
     .setCaptionLabel(UI_Interfaces_str_array[PS_Interface[instance]])
     .removeItem(UI_Interfaces_str_array[PS_Interface[instance]])
+    .setLock(true)
     .setDirection(Controller.HORIZONTAL)
     //.setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
     ;
