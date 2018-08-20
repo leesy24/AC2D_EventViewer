@@ -33,8 +33,10 @@ static boolean OS_is_Others = false;
 static String DATA_DIR_FULL_NAME = null;
 
 // Initial strings for empty string.
-static String EVENT_VERSION_NUMBER = "1.00.14";
-static String EVENT_RELEASE_DATE = "2018-08-16";
+static String EVENT_VERSION_NUMBER = "Unknown";
+static String EVENT_RELEASE_DATE = "Unknown";
+
+static boolean EVENT_VERSION_DATE_enabled = false;
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
@@ -82,7 +84,6 @@ void setup() {
 //  fullScreen();
 //  surface.setResizable(true);
 
-
   // Must very first initialize font.
   SCREEN_PFront = createFont("SansSerif", 32);
   textFont(SCREEN_PFront);
@@ -121,6 +122,10 @@ void setup() {
 
   DragDrop_setup();
 
+  // Initial strings for empty string.
+  EVENT_VERSION_NUMBER = "1.00.14";
+  EVENT_RELEASE_DATE = "2018-08-16";
+
   Const_setup();
 
   frameRate(FRAME_RATE);
@@ -153,6 +158,12 @@ void setup() {
   //SYSTEM_PASSWORD_disabled = false;
   //SYSTEM_PASSWORD_disabled = true;
 
+  // Check version number and release date of event log.
+  if (!EVENT_VERSION_NUMBER.equals("Unknown")
+      ||
+      !EVENT_RELEASE_DATE.equals("Unknown")) {
+    EVENT_VERSION_DATE_enabled = true;
+  }
   // Need to call gc() to free memory.
   System.gc();
 }
@@ -287,7 +298,10 @@ void Notice_Messages_draw()
 {
   ArrayList<String> strings = new ArrayList<String>();
 
-  strings.add("V"+EVENT_VERSION_NUMBER+"@"+EVENT_RELEASE_DATE);
+  if (EVENT_VERSION_DATE_enabled)
+  {
+    strings.add("V"+EVENT_VERSION_NUMBER+"@"+EVENT_RELEASE_DATE);
+  }
 
   if (Bubble_Info_enabled)
   {
