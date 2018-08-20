@@ -32,6 +32,9 @@ static boolean OS_is_Others = false;
 
 static String DATA_DIR_FULL_NAME = null;
 
+static String EVENT_VERSION_NUMBER = "Unknown";
+static String EVENT_RELEASE_DATE = "Unknown";
+
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
@@ -282,6 +285,8 @@ void draw() {
 void Notice_Messages_draw()
 {
   ArrayList<String> strings = new ArrayList<String>();
+
+  strings.add("V"+EVENT_VERSION_NUMBER+"@"+EVENT_RELEASE_DATE);
 
   if (Bubble_Info_enabled)
   {
