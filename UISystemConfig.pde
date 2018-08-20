@@ -1099,7 +1099,11 @@ void UI_System_Config_draw()
       UI_System_Config_state = UI_System_Config_state_next;
       break;
     case RESET:
+      UI_System_Config_reset();
+      UI_System_Config_enabled = false;
+      UI_System_Config_state = UI_System_Config_state_enum.IDLE;
       UI_Interfaces_enabled = true;
+      Main_restart_enabled = true;
       // To restart program set frameCount to -1, this wiil call setup() of main.
       //frameCount = -1;
       break;

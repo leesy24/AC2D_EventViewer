@@ -38,6 +38,8 @@ static String EVENT_RELEASE_DATE = "Unknown";
 
 static boolean EVENT_VERSION_DATE_enabled = false;
 
+static boolean Main_restart_enabled = false;
+
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
@@ -177,21 +179,12 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (UI_Interfaces_changed_any) {
-    // Title set to default.
-    Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
-    Config_setup();
+  if (Main_restart_enabled) {
+    Regions_apply_local();
     ROI_Data_setup();
     PS_Data_setup();
-    Regions_setup();
     Relay_Module_setup();
-    UI_Interfaces_setup();
-    // Set window title
-    surface.setTitle(Title);
-    // Need to call gc() to free memory.
-    System.gc();
-
-    UI_Interfaces_update();
+    Main_restart_enabled = false;
   }
 
   if (Screen_check_update()) {

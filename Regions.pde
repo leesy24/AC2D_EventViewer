@@ -37,6 +37,11 @@ void Regions_update()
   Regions_handle.update();
 }
 
+void Regions_apply_local()
+{
+  Regions_handle.apply_local();
+}
+
 void Regions_draw()
 {
   Regions_handle.draw();
@@ -241,6 +246,56 @@ class Regions {
       region_data.rect_scr_width = scr_x_max - scr_x_min;
       region_data.rect_scr_height = scr_y_max - scr_y_min;
     }
+  }
+
+  void apply_local() {
+    for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++) {
+      regions_array[instance] = new ArrayList<Region_Data>();
+      regions_priority_max[instance] = MIN_INT;
+
+      for (Region_CSV region_csv:regions_csv_array[instance]) {
+        // If name start with # than skip it.
+        if (region_csv.name.length() > 0 && region_csv.name.charAt(0) == '#') {
+          continue;
+        }
+        Region_Data region_data =
+          new Region_Data(
+            region_csv.name,
+            region_csv.priority);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+":region_data:"+"name="+region_data.name+",priority="+region_data.priority);
+
+        regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
+
+        region_data.relay_index = region_csv.relay_index;
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+":region_data:"+"name="+region_data.name+",relay_index="+region_data.relay_index);
+
+        region_data.no_mark_big = region_csv.no_mark_big;
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
+        //println("Regions:apply_local():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
+
+        region_data.set_rect_data(
+          region_csv.rect_field_x * 100,
+          region_csv.rect_field_y * 100,
+          region_csv.rect_field_width * 100,
+          region_csv.rect_field_height * 100,
+          region_csv.rect_stroke_first_color,
+          region_csv.rect_stroke_other_color,
+          region_csv.rect_stroke_weight,
+          region_csv.rect_dashed_gap);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+":region_data:"+"x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
+        //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+"region_data:"+"f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
+        //println("Regions:apply_local():"+instance+":region_data:"+"name="+region_data.name+",Rect_First_Color="+(int)Long.parseLong(variable.getString("Rect_First_Color"), 16));
+
+        region_data.set_marker_data(
+          region_csv.marker_stroke_color,
+          region_csv.marker_stroke_weight,
+          region_csv.marker_fill_color);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:apply_local():"+instance+":region_data:"+"m_s_c="+region_data.marker_stroke_color+",m_s_w="+region_data.marker_stroke_weight+",m_f_c="+region_data.marker_fill_color);
+
+        regions_array[instance].add(region_data);
+      }
+    }
+    this.update();
   }
 
   void draw() {
