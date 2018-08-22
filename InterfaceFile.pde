@@ -216,7 +216,7 @@ class Interfaces_File {
     if(instance >= PS_INSTANCE_MAX)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:load("+instance+"):instance exceed MAX.");
-      SYSTEM_logger.severe("Interfaces_File:close("+instance+"):instance exceed MAX.");
+      SYSTEM_logger.severe("Interfaces_File:load("+instance+"):instance exceed MAX.");
       return false;
     }
     if(instance_opened[instance] != true)
