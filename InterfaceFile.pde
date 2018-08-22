@@ -133,6 +133,7 @@ class Interfaces_File {
       String[] target_files_list = target_handle.list();
       long file_time_stamp = -1;
       if (target_files_list != null && target_files_list.length > 0) {
+        Arrays.sort(target_files_list);
         //println("target_files_list.length="+target_files_list.length);
         for (String target_file_name:target_files_list) {
           //println("target_file_name="+target_file_name);
