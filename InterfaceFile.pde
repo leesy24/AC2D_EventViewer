@@ -351,6 +351,7 @@ class Interfaces_File {
           }
           file_name_index[instance] = 0;
           base_time_stamp[instance] = file_time_stamp[instance] - millis();
+          Main_restart_enabled = true;
         }
         else {
           eofl_reset_count[instance] --;
