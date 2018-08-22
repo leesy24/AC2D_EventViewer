@@ -117,8 +117,6 @@ static int ROI_OBJECT_DETECT_KEEP_TIME = 2000; // unit is milli-second(ms)
 
 static int ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = 20000; // = 200cm= 2meter
 
-static int ROI_OBJECT_DRAW_INFO_TIMEOUT = 10000; // 10 seconds
-
 static int PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = 2000; // unit is ms.
 static int PS_DATA_SAVE_EVENTS_DURATION_LIMIT = 30000; // unit is ms.
 
@@ -336,6 +334,8 @@ class ROI_Data {
 
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects_new.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
 
+      int distance_min = MAX_INT;
+      ROI_Object_Data object_last_distance_min = null;
       // Find nearest object of objects_last.
       for (ROI_Object_Data object_last:objects_last[instance]) {
         int distance =
@@ -346,33 +346,40 @@ class ROI_Data {
             object_last.mi_center_y);
         // Check distance of object_new and object_last is near.
         if (distance > ((object_new.mi_diameter + ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX * 2) / 2)
-            &&
+            ||
             distance > ((object_last.mi_diameter + ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX * 2) / 2)) {
           continue;
         }
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_last["+objects_last[instance].indexOf(object_last)+"]:"+"overlapped");
 
-        if (object_last.appeared_time_start < object_new.appeared_time_start) {
-          object_new.appeared_time_start = object_last.appeared_time_start;
-        }
-
-        // Check object_last and object_new are big enough.
-        if (!object_last.big_enough || !object_new.big_enough) {
+        // Check distance of object_new and object_last is min.
+        if (distance >= distance_min) {
           continue;
         }
-        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_last.detected_time_start="+object_last.detected_time_start+":object_last="+object_last);
-        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_start ="+object_new.detected_time_start+":object_new="+object_new);
-
-        if (object_last.detected_time_start < object_new.detected_time_start) {
-          object_new.detected_time_start = object_last.detected_time_start;
-        }
-
-        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last  ="+object_new.detected_time_last+":object_new="+object_new);
-
-        object_last.reused = true;
-
-        //object_last.reused = true;
+        distance_min = distance;
+        object_last_distance_min = object_last;
       } // End of for (ROI_Object_Data object_last:objects_last[instance])
+
+      if (distance_min != MAX_INT) {
+        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.appeared_time_start ="+object_new.appeared_time_start+":object_new="+object_new);
+
+        object_new.appeared_time_start = object_last_distance_min.appeared_time_start;
+
+        // Check object_last_distance_min and object_new are big enough.
+        // And, Check region index min of objects are same.
+        if (object_last_distance_min.big_enough && object_new.big_enough) {
+          if (object_last_distance_min.region_index_min == object_new.region_index_min) {
+            if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_last_distance_min.detected_time_start="+object_last_distance_min.detected_time_start+":object_last_distance_min="+object_last_distance_min);
+            if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_start ="+object_new.detected_time_start+":object_new="+object_new);
+
+            object_new.detected_time_start = object_last_distance_min.detected_time_start;
+
+            if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last  ="+object_new.detected_time_last+":object_new="+object_new);
+
+            object_last_distance_min.reused = true;
+          }
+        }
+      } // End of if (object_last_distance_min != null)
     } // End of for (ROI_Object_Data object_new:objects_new)
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 1");
 
@@ -523,7 +530,7 @@ class ROI_Data {
 
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:draw_objects("+instance+")"+":"+i+":time_duration="+time_duration);
 
-        // Check object is appeared during enough time.
+        // Check object is detected during enough time.
         if (time_duration < ROI_OBJECT_DETECT_TIME_MIN) {
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG || PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:draw_objects("+instance+")"+":"+i+":time too short time_duration="+time_duration);
           continue;
@@ -593,7 +600,7 @@ class ROI_Data {
 
     if (!ROI_Data_draw_info_enabled[instance]) return;
 
-    if (get_millis_diff(ROI_Data_draw_info_timer[instance]) >= ROI_OBJECT_DRAW_INFO_TIMEOUT)
+    if (get_millis_diff(ROI_Data_draw_info_timer[instance]) >= SYSTEM_UI_TIMEOUT * 1000)
     {
       ROI_Data_draw_info_enabled[instance] = false;
     }
@@ -676,7 +683,7 @@ class ROI_Data {
     strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
     strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
     strings.add("Num. of points:" + object.number_of_points);
-    strings.add("Time-out:" + ((ROI_OBJECT_DRAW_INFO_TIMEOUT + 1000 - get_millis_diff(ROI_Data_draw_info_timer[instance]))/1000) + "s");
+    strings.add("Time-out:" + ((SYSTEM_UI_TIMEOUT * 1000 + 1000 - get_millis_diff(ROI_Data_draw_info_timer[instance]))/1000) + "s");
 
     // Get max string width
     textSize(FONT_HEIGHT);
