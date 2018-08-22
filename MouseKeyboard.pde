@@ -61,8 +61,7 @@ void keyPressed()
     }
     else if(keyCode == KeyEvent.VK_F5)
     {
-      // To restart program set frameCount to -1, this wiil call setup() of main.
-      frameCount = -1;
+      Main_restart_enabled = true;
     }
     else if(keyCode == KeyEvent.VK_F4)
     {
