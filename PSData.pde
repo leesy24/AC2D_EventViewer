@@ -950,6 +950,7 @@ class PS_Data {
     int distance;
     int mi_x, mi_y;
     int point_x_curr, point_y_curr;
+    int pulse_width;
     int point_size_curr = PS_DATA_POINT_WEIGHT; // Set weight of point rect
     color point_color_curr = C_PS_DATA_POINT;
     boolean point_is_contains_curr;
@@ -1003,6 +1004,7 @@ class PS_Data {
       mi_y = this.mi_y[instance][j];
       point_x_curr = this.scr_x[instance][j];
       point_y_curr = this.scr_y[instance][j];
+      pulse_width = this.pulse_width[instance][j];
 
       if (point_x_curr == MIN_INT && point_y_curr == MIN_INT) {
         //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + "No echo");
@@ -1020,11 +1022,16 @@ class PS_Data {
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         */
-        ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
-        if (region_indexes.size() > 0) {
-          ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
-          point_is_contains_curr = true;
-          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_indexes.get(0))+":x="+mi_x+",y="+mi_y);
+        if (pulse_width >= PS_DATA_PULSE_WIDTH_MIN) {
+          ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
+          if (region_indexes.size() > 0) {
+            ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
+            point_is_contains_curr = true;
+            if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_indexes.get(0))+":x="+mi_x+",y="+mi_y);
+          }
+          else {
+            point_is_contains_curr = false;
+          }
         }
         else {
           point_is_contains_curr = false;
@@ -1065,7 +1072,7 @@ class PS_Data {
                 &&
                 (point_y_curr > mouse_over_y_min && point_y_curr < mouse_over_y_max)
               ) {
-              //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (mi_x/10000.0) + "," + (mi_y/10000.0) + ")" + ",pulse width=" + pulse_width[instance][j]);
+              //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (mi_x/10000.0) + "," + (mi_y/10000.0) + ")" + ",pulse width=" + pulse_width);
               BUBBLE_INFO_AVAILABLE = true;
               BUBBLE_INFO_POINT = j;
               BUBBLE_INFO_DISTANCE = float(distance/10)/1000.0;
@@ -1074,7 +1081,7 @@ class PS_Data {
               BUBBLE_INFO_BOX_X = point_x_curr;
               BUBBLE_INFO_BOX_Y = point_y_curr;
               BUBBLE_INFO_ANGLE = float(int(point_angle_degree[instance][j]*100.0))/100.0;
-              BUBBLE_INFO_PULSE_WIDTH = pulse_width[instance][j];
+              BUBBLE_INFO_PULSE_WIDTH = pulse_width;
               point_size_curr = BUBBLE_INFO_POINT_WH;
             }
             else {
