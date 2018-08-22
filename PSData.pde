@@ -129,6 +129,7 @@ void PS_Data_setup()
       Interfaces_File_setup();
       Interfaces_File_handle.open(i, FILE_name[i]);
       PS_Data_handle.file_name[i] = FILE_name[i];
+      PS_Data_handle.files_time_long[i] = Interfaces_File_handle.get_files_time_long(i);
     }
     else if(PS_Interface[i] == PS_Interface_None) {
       // Nothing to do.
@@ -344,6 +345,7 @@ class PS_Data {
   int[] load_done_interval_count = new int[PS_INSTANCE_MAX];
   int[] load_done_interval_millis_accu = new int[PS_INSTANCE_MAX];
   String[] file_name = new String[PS_INSTANCE_MAX];
+  int[] files_time_long = new int[PS_INSTANCE_MAX];
   boolean[] time_stamp_reseted = new boolean[PS_INSTANCE_MAX];
   boolean[] interfaces_err_started = new boolean[PS_INSTANCE_MAX];
   int[] interfaces_err_start_millis = new int[PS_INSTANCE_MAX];
@@ -378,6 +380,7 @@ class PS_Data {
       load_done_interval_count[i] = 0;
       load_done_interval_millis_accu[i] = 0;
       file_name[i] = null;
+      files_time_long[i] = -1;
       time_stamp_reseted[i] = false;
       // Test time_stamp wrap-around.
       //time_stamp_offset[i] = -1;
@@ -815,8 +818,10 @@ class PS_Data {
     ArrayList<String> strings = new ArrayList<String>();
 
     strings.add("Interface:" + PS_Interface_str[PS_Interface[instance]]);
+    if (files_time_long[instance] != -1)
+      strings.add("Time long:" + files_time_long[instance]/1000. + "s");
     if (file_name[instance] != null)
-      strings.add("File name:" + file_name[instance]);;
+      strings.add("File name:" + file_name[instance]);
     if (load_take_time[instance] != -1)
       strings.add("Response t.:" + load_take_time[instance] + "ms");
     if (load_done_interval_millis[instance] != -1)
