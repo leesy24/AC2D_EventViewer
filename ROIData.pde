@@ -384,11 +384,10 @@ class ROI_Data {
               if (object_last_distance_min.detected_time_start[region_index_last] < object_new.detected_time_start[region_index_new]) {
                 object_new.detected_time_start[region_index_new] = object_last_distance_min.detected_time_start[region_index_last];
               }
+              if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last[region_index_new]  ="+object_new.detected_time_last[region_index_new]+":object_new="+object_new);
               break;
             } // End of for (int region_index_last:object_last_distance_min.region_indexes)
           } // End of for (int region_index_new:object_new.region_indexes)
-
-          if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.detected_time_last[region_index_new]  ="+object_new.detected_time_last[region_index_new]+":object_new="+object_new);
 
           object_last_distance_min.reused = true;
         }
