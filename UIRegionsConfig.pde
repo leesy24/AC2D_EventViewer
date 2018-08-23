@@ -1242,6 +1242,11 @@ void UI_Regions_Config_input_update()
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_index is not valid. "+val);
             break;
           }
+          // Check relay name is valid.
+          if (str.equals("")) {
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_name is blank. "+str+","+Relay_Module_get_relay_name(val));
+            break;
+          }
           if (str.equals(Relay_Module_get_relay_name(val))) {
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_name is same. "+str+","+Relay_Module_get_relay_name(val));
             break;
