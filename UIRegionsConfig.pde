@@ -1292,7 +1292,6 @@ void UI_Regions_Config_input_update()
             break;
           }
           region_csv.rect_field_x = val;
-          region_csv.rect_field_width -= val;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
@@ -1307,35 +1306,74 @@ void UI_Regions_Config_input_update()
             break;
           }
           region_csv.rect_field_y = val;
-          region_csv.rect_field_height -= val;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
         case RECT_FIELD_END_X: // Rect field end x
+          // Get start_x input value from text field of this region.
+          int start_x;
+          try {
+            start_x =
+              int(Float.parseFloat(
+                UI_Regions_Config_cp5_local[i]
+                  .get(
+                    Textfield.class,
+                    "UI_Regions_Config_rect_start_x_input_"+region_csv_index)
+                      .getText()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          catch (NullPointerException e) {
+            break;
+          }
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
           catch (NumberFormatException e) {
             break;
           }
-          if (val == region_csv.rect_field_width) {
+          if (start_x > val) {
             break;
           }
-          region_csv.rect_field_width = val - region_csv.rect_field_x;
+          if ((val - start_x) == region_csv.rect_field_width) {
+            break;
+          }
+          region_csv.rect_field_width = val - start_x;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
         case RECT_FIELD_END_Y: // Rect field end y
+          // Get start_y input value from text field of this region.
+          int start_y;
+          try {
+            start_y =
+              int(Float.parseFloat(
+                UI_Regions_Config_cp5_local[i]
+                  .get(
+                    Textfield.class,
+                    "UI_Regions_Config_rect_start_y_input_"+region_csv_index)
+                      .getText()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          catch (NullPointerException e) {
+            break;
+          }
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
           catch (NumberFormatException e) {
             break;
           }
-          if (val == region_csv.rect_field_height) {
+          if (start_y > val) {
             break;
           }
-          region_csv.rect_field_height = val - region_csv.rect_field_y;
+          if ((val - start_y) == region_csv.rect_field_height) {
+            break;
+          }
+          region_csv.rect_field_height = val - start_y;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
