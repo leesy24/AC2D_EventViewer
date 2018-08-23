@@ -390,8 +390,8 @@ class ROI_Data {
           } // End of for (int region_index_new:object_new.region_indexes)
 
           object_last_distance_min.reused = true;
-        }
-      } // End of if (object_last_distance_min != null)
+        } // End of if (object_last_distance_min.big_enough && object_new.big_enough)
+      } // End of if (distance_min != MAX_INT)
     } // End of for (ROI_Object_Data object_new:objects_new)
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 1");
 
@@ -414,7 +414,7 @@ class ROI_Data {
       /**/
       boolean set_disappeared = false;
       boolean add_object_last = false;
-      for (int region_index:object_last.region_indexes) {
+      for (int region_index = 0; region_index < object_last.regions_count; region_index ++) {
         int time_duration =
           get_int_diff(
             object_last.detected_time_last[region_index], object_last.detected_time_start[region_index]);
@@ -1070,6 +1070,7 @@ final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = false;
 final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = false;
 
 class ROI_Object_Data {
+  public int regions_count;
   public ArrayList<Integer> region_indexes;
   public int region_index_min;
   public int mi_start_x, mi_start_y;
@@ -1105,11 +1106,17 @@ class ROI_Object_Data {
     this.detected_time_total_last = time_stamp;
     this.detected_time_start = new int[regions_count];
     this.detected_time_last = new int[regions_count];
-    for (int region_index:region_indexes)
+    //for (int region_index:region_indexes)
+    //{
+    //  this.detected_time_start[region_index] =
+    //  this.detected_time_last[region_index] = time_stamp;
+    //}
+    for (int region_index = 0; region_index < regions_count; region_index ++)
     {
       this.detected_time_start[region_index] =
       this.detected_time_last[region_index] = time_stamp;
     }
+    this.regions_count = regions_count;
     this.region_indexes = region_indexes;
     this.region_index_min = region_indexes.get(0);
     this.mi_start_x = mi_start_x;
