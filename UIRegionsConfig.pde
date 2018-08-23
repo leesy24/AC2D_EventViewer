@@ -51,10 +51,10 @@ static enum UI_Regions_Config_tf_enum {
   RELAY_INDEX,
   RELAY_NAME,
   NO_MARK_BIG,
-  RECT_FIELD_X,
-  RECT_FIELD_Y,
-  RECT_FIELD_WIDTH,
-  RECT_FIELD_HEIGHT,
+  RECT_FIELD_START_X,
+  RECT_FIELD_START_Y,
+  RECT_FIELD_END_X,
+  RECT_FIELD_END_Y,
   RECT_DASHED_GAP,
   MAX
 }
@@ -300,13 +300,13 @@ void UI_Regions_Config_update_instance(int instance)
 
     x += FONT_HEIGHT;
 
-    // Rect. x and y
+    // Rect. start x and y
     y += h + TEXT_MARGIN;
-    str = "Rect. x/y(m)";
+    str = "Rect. start x/y(m)";
     w = int(textWidth(str));
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_x_"+region_csv_index);
+    tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_start_xy_"+region_csv_index);
     tl_handle
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
@@ -338,13 +338,13 @@ void UI_Regions_Config_update_instance(int instance)
         ;
     */
 
-    // Rect. width and height
+    // Rect. end x and y
     y += h + TEXT_MARGIN;
-    str = "Rect. w/h(m)";
+    str = "Rect. end x/y(m)";
     w = int(textWidth(str));
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_w_"+region_csv_index);
+    tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_end_xy_"+region_csv_index);
     tl_handle
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
@@ -440,15 +440,15 @@ void UI_Regions_Config_update_instance(int instance)
         .getStyle()
           .marginLeft = 1;
 
-    // Rect. x input
+    // Rect. start x input
     y += h + TEXT_MARGIN;
     str = String.valueOf(Regions_handle.get_region_csv_rect_field_x(instance, region_csv_index)/100.);
     w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_x_input_"+region_csv_index);
+    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_start_x_input_"+region_csv_index);
     tf_handle
-      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_X.ordinal())
+      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_START_X.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
@@ -476,7 +476,7 @@ void UI_Regions_Config_update_instance(int instance)
         .getStyle()
           .marginLeft = 1;
 
-    // Rect. y input
+    // Rect. start y input
     save_x = x;
     x += w + TEXT_MARGIN;
     save_w = w + TEXT_MARGIN;
@@ -485,9 +485,9 @@ void UI_Regions_Config_update_instance(int instance)
     w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w + save_w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_y_input_"+region_csv_index);
+    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_start_y_input_"+region_csv_index);
     tf_handle
-      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_Y.ordinal())
+      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_START_Y.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
@@ -516,15 +516,23 @@ void UI_Regions_Config_update_instance(int instance)
           .marginLeft = 1;
     x = save_x;
 
-    // Rect. w input
+    // Rect. end x input
     y += h + TEXT_MARGIN;
-    str = String.valueOf(Regions_handle.get_region_csv_rect_field_width(instance, region_csv_index)/100.);
+    str =
+      String.valueOf(
+        (
+          Regions_handle.get_region_csv_rect_field_x(instance, region_csv_index)
+          +
+          Regions_handle.get_region_csv_rect_field_width(instance, region_csv_index)
+        )
+        /
+        100.);
     w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_w_input_"+region_csv_index);
+    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_end_x_input_"+region_csv_index);
     tf_handle
-      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_WIDTH.ordinal())
+      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_END_X.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
@@ -552,18 +560,26 @@ void UI_Regions_Config_update_instance(int instance)
         .getStyle()
           .marginLeft = 1;
 
-    // Rect. h input
+    // Rect. end y input
     save_x = x;
     x += w + TEXT_MARGIN;
     save_w = w + TEXT_MARGIN;
     //y += h + TEXT_MARGIN;
-    str = String.valueOf(Regions_handle.get_region_csv_rect_field_height(instance, region_csv_index)/100.);
+    str =
+      String.valueOf(
+        (
+          Regions_handle.get_region_csv_rect_field_y(instance, region_csv_index)
+          +
+          Regions_handle.get_region_csv_rect_field_height(instance, region_csv_index)
+        )
+        /
+        100.);
     w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w + save_w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_h_input_"+region_csv_index);
+    tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_end_y_input_"+region_csv_index);
     tf_handle
-      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_HEIGHT.ordinal())
+      .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_END_Y.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
@@ -1265,7 +1281,7 @@ void UI_Regions_Config_input_update()
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
-        case RECT_FIELD_X: // Rect field x
+        case RECT_FIELD_START_X: // Rect field start x
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
@@ -1276,10 +1292,11 @@ void UI_Regions_Config_input_update()
             break;
           }
           region_csv.rect_field_x = val;
+          region_csv.rect_field_width -= val;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
-        case RECT_FIELD_Y: // Rect field y
+        case RECT_FIELD_START_Y: // Rect field start y
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
@@ -1290,10 +1307,11 @@ void UI_Regions_Config_input_update()
             break;
           }
           region_csv.rect_field_y = val;
+          region_csv.rect_field_height -= val;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
-        case RECT_FIELD_WIDTH: // Rect field width
+        case RECT_FIELD_END_X: // Rect field end x
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
@@ -1303,11 +1321,11 @@ void UI_Regions_Config_input_update()
           if (val == region_csv.rect_field_width) {
             break;
           }
-          region_csv.rect_field_width = val;
+          region_csv.rect_field_width = val - region_csv.rect_field_x;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
-        case RECT_FIELD_HEIGHT: // Rect field height
+        case RECT_FIELD_END_Y: // Rect field end y
           try {
             val = int(Float.parseFloat(str.trim()) * 100.0);
           }
@@ -1317,7 +1335,7 @@ void UI_Regions_Config_input_update()
           if (val == region_csv.rect_field_height) {
             break;
           }
-          region_csv.rect_field_height = val;
+          region_csv.rect_field_height = val - region_csv.rect_field_y;
           updated_instance = true;
           if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
           break;
