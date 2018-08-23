@@ -553,10 +553,11 @@ class ROI_Data {
 
         int time_duration_detected_total = get_int_diff(object.detected_time_total_last, object.detected_time_total_start);
 
+        // Check detected region is first region.
         if (region_index_detected == 0) {
-          println("region_index_detected="+region_index_detected);
-          println("time_duration_detected_total="+time_duration_detected_total);
-          println("time_duration_detected="+time_duration_detected);
+          //println("region_index_detected="+region_index_detected);
+          //println("time_duration_detected_total="+time_duration_detected_total);
+          //println("time_duration_detected="+time_duration_detected);
           if (time_duration_detected_total == time_duration_detected) {
             if (time_duration_detected < ROI_OBJECT_DETECT_TIME_MIN * 2) {
               continue;
