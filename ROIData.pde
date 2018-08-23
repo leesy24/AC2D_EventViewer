@@ -414,21 +414,36 @@ class ROI_Data {
       /**/
       boolean set_disappeared = false;
       boolean add_object_last = false;
+      int detected_time_total_last_max = MIN_INT;
+      int detected_time_total_start_min = MAX_INT;
       for (int region_index = 0; region_index < object_last.regions_count; region_index ++) {
         int time_duration =
           get_int_diff(
-            object_last.detected_time_last[region_index], object_last.detected_time_start[region_index]);
+            object_last.detected_time_last[region_index],
+            object_last.detected_time_start[region_index]);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"object_last time_duration="+time_duration);
         /**/
         if (object_last.disappeared == false) {
           if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
-            object_last.detected_time_total_last = time_stamp_curr[instance];
-            object_last.detected_time_total_start =
-              object_last.detected_time_total_last - ROI_OBJECT_DETECT_KEEP_TIME;
-            object_last.detected_time_last[region_index] = time_stamp_curr[instance];
+            object_last.detected_time_last[region_index] =
+              time_stamp_curr[instance];
             object_last.detected_time_start[region_index] =
-              object_last.detected_time_last[region_index] - ROI_OBJECT_DETECT_KEEP_TIME;
+              time_stamp_curr[instance]
+              -
+              ROI_OBJECT_DETECT_TIME_MIN
+              -
+              ROI_OBJECT_DETECT_KEEP_TIME
+              +
+              1;
+            detected_time_total_last_max =
+              max(
+                detected_time_total_last_max,
+                object_last.detected_time_last[region_index]);
+            detected_time_total_start_min =
+              min(
+                detected_time_total_start_min,
+                object_last.detected_time_start[region_index]);
             set_disappeared = true;
             add_object_last = true;
           }
@@ -437,13 +452,20 @@ class ROI_Data {
           if (time_duration > 0) {
             time_duration -=
               get_int_diff(
-                  time_stamp_curr[instance], object_last.detected_time_last[region_index]);
-            object_last.detected_time_total_last = time_stamp_curr[instance];
-            object_last.detected_time_total_start =
-              object_last.detected_time_total_last - time_duration;
-            object_last.detected_time_last[region_index] = time_stamp_curr[instance];
+                  time_stamp_curr[instance],
+                  object_last.detected_time_last[region_index]);
+            object_last.detected_time_last[region_index] =
+              time_stamp_curr[instance];
             object_last.detected_time_start[region_index] =
-              object_last.detected_time_last[region_index] - time_duration;
+              time_stamp_curr[instance] - time_duration;
+            detected_time_total_last_max =
+              max(
+                detected_time_total_last_max,
+                object_last.detected_time_last[region_index]);
+            detected_time_total_start_min =
+              min(
+                detected_time_total_start_min,
+                object_last.detected_time_start[region_index]);
             add_object_last = true;
           }
         }
@@ -452,6 +474,8 @@ class ROI_Data {
         if (set_disappeared) {
           object_last.disappeared = true;
         }
+        object_last.detected_time_total_last = detected_time_total_last_max;
+        object_last.detected_time_total_start = detected_time_total_start_min;
         objects_new.add(object_last);
       }
     } // End of for (ROI_Object_Data object_last:objects_last[instance])
@@ -555,14 +579,20 @@ class ROI_Data {
 
         // Check detected region is first region.
         if (region_index_detected == 0) {
-          //println("region_index_detected="+region_index_detected);
-          //println("time_duration_detected_total="+time_duration_detected_total);
-          //println("time_duration_detected="+time_duration_detected);
+          //int time_duration_appeared = get_int_diff(object.appeared_time_last, object.appeared_time_start);
           if (time_duration_detected_total == time_duration_detected) {
             if (time_duration_detected < ROI_OBJECT_DETECT_TIME_MIN * 2) {
               continue;
             }
+            //println("time_duration_appeared="+time_duration_appeared);
+            //println("time_duration_detected_total="+time_duration_detected_total);
+            //println("time_duration_detected="+time_duration_detected);
           }
+          //else {
+            //println("time_duration_appeared="+time_duration_appeared);
+            //println("time_duration_detected_total="+time_duration_detected_total);
+            //println("time_duration_detected="+time_duration_detected);
+          //}
         }
 
         detected_objects_new.add(new ROI_Detected_Object_Data(object.mi_center_x, object.mi_center_y, object.mi_diameter));
