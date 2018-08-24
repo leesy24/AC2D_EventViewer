@@ -739,11 +739,22 @@ class ROI_Data {
     strings.add("Appeared dur.:" + ((get_int_diff(object.appeared_time_last, object.appeared_time_start))/100/10.) + "s");
     strings.add("Detected dur.:" + ((get_int_diff(object.detected_time_last[object.region_index_min], object.detected_time_start[object.region_index_min]))/100/10.) + "s");
     strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
-    strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");
-    strings.add("Center Y:" + ((object.mi_center_y/10)/1000.0) + "m");
+    // Check need to rotate x,y,w,h.
+    if (ROTATE_FACTOR[instance] == 315 || ROTATE_FACTOR[instance] == 135)
+    {
+      strings.add("Center X:" + ((object.mi_center_y/10)/1000.0) + "m");
+      strings.add("Center Y:" + ((object.mi_center_x/10)/1000.0) + "m");
+      strings.add("Width:" + ((object.mi_height/10)/1000.0) + "m");
+      strings.add("Height:" + ((object.mi_width/10)/1000.0) + "m");
+    }
+    else
+    {
+      strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");
+      strings.add("Center Y:" + ((object.mi_center_y/10)/1000.0) + "m");
+      strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
+      strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
+    }
     strings.add("Diameter:" + ((object.mi_diameter/10)/1000.0) + "m");
-    strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
-    strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
     strings.add("Num. of points:" + object.number_of_points);
     strings.add("Time-out:" + ((SYSTEM_UI_TIMEOUT * 1000 + 1000 - get_millis_diff(ROI_Data_draw_info_timer[instance]))/1000) + "s");
 

@@ -1076,8 +1076,17 @@ class PS_Data {
               BUBBLE_INFO_AVAILABLE = true;
               BUBBLE_INFO_POINT = j;
               BUBBLE_INFO_DISTANCE = float(distance/10)/1000.0;
-              BUBBLE_INFO_COR_X = float(mi_x/10)/1000.0;
-              BUBBLE_INFO_COR_Y = float(mi_y/10)/1000.0;
+              // Check need to rotate x,y.
+              if (ROTATE_FACTOR[instance] == 315 || ROTATE_FACTOR[instance] == 135)
+              {
+                BUBBLE_INFO_COR_X = float(mi_y/10)/1000.0;
+                BUBBLE_INFO_COR_Y = float(mi_x/10)/1000.0;
+              }
+              else
+              {
+                BUBBLE_INFO_COR_X = float(mi_x/10)/1000.0;
+                BUBBLE_INFO_COR_Y = float(mi_y/10)/1000.0;
+              }
               BUBBLE_INFO_BOX_X = point_x_curr;
               BUBBLE_INFO_BOX_Y = point_y_curr;
               BUBBLE_INFO_ANGLE = float(int(point_angle_degree[instance][j]*100.0))/100.0;
