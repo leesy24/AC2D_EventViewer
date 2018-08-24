@@ -768,17 +768,24 @@ class PS_Data {
         if(pulse_width[instance][j] >= PS_DATA_PULSE_WIDTH_MAX)
         {
           pulse_width_color[instance][j] =
-            PS_Data_pulse_width_color_value[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN];
+            PS_Data_pulse_width_color_value[
+              PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN];
+          //pulse_width_color[instance][j] = color(255,255,255,255); // White
+          //pulse_width_color[instance][j] = color(0,0,0,0); // Black
         }
         else if(pulse_width[instance][j] <= PS_DATA_PULSE_WIDTH_MIN)
         {
           pulse_width_color[instance][j] =
             PS_Data_pulse_width_color_value[0];
+          //pulse_width_color[instance][j] = color(255,255,255,255); // White
         }
         else
         {
           pulse_width_color[instance][j] =
-            PS_Data_pulse_width_color_value[pulse_width[instance][j] - PS_DATA_PULSE_WIDTH_MIN];
+            PS_Data_pulse_width_color_value[
+              pulse_width[instance][j] - PS_DATA_PULSE_WIDTH_MIN];
+          //pulse_width_color[instance][j] = color(255,255,255,255); // White
+          //pulse_width_color[instance][j] = color(0,0,0,0); // Black
         }
 
         i = i + 4;
@@ -981,11 +988,6 @@ class PS_Data {
     // Sets the weight used to rect borders around shapes.
     strokeWeight(1);
 
-    // Check pulse width exist than color mode set to HSB.
-    if (data_content[instance] != 4) {
-      colorMode(HSB, point_line_color_HSB_max_const);
-    }
-
     if (time_stamp_reseted[instance]) {
       ROI_Data_handle.clear_objects(instance);
       time_stamp_reseted[instance] = false;
@@ -1035,6 +1037,7 @@ class PS_Data {
         }
         else {
           point_is_contains_curr = false;
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+")"+":x="+mi_x+",y="+mi_y+",pw="+pulse_width);
         }
 
         if (point_is_contains_curr
@@ -1168,11 +1171,6 @@ class PS_Data {
         }
       }
     } // End of for (int j = 0; j < number_of_points[instance]; j++)
-
-    // Check pulse width exist than color mode back to RGB.
-    if (data_content[instance] != 4) {
-      colorMode(RGB, 255);
-    }
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):Exit");
   } // End of draw_points()
