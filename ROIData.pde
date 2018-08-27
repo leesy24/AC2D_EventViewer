@@ -242,8 +242,10 @@ void ROI_Data_mouse_dragged()
 class ROI_Data {
   ArrayList<ROI_Point_Data>[] points_new = new ArrayList[PS_INSTANCE_MAX];
   ArrayList<ROI_Object_Data>[] objects_last = new ArrayList[PS_INSTANCE_MAX];
-  int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
-  //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
+  boolean[] time_stamp_init_done = new boolean[PS_INSTANCE_MAX];
+  int[] time_stamp_new = new int[PS_INSTANCE_MAX];
+  int[] time_stamp_last = new int[PS_INSTANCE_MAX];
+  //long[] time_stamp_new = new long[PS_INSTANCE_MAX];
   float[] angle_step = new float[PS_INSTANCE_MAX];
   boolean[] detected_objects_are_same = new boolean[PS_INSTANCE_MAX];
   ROI_Detected_Objects[] detected_objects_last = new ROI_Detected_Objects[PS_INSTANCE_MAX];
@@ -257,6 +259,7 @@ class ROI_Data {
       objects_last[i] = new ArrayList<ROI_Object_Data>();
       detected_objects_last[i] = new ROI_Detected_Objects();
       detected_objects_are_same[i] = false;
+      time_stamp_init_done[i] = false;
     }
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():Exit");
   }
@@ -265,7 +268,18 @@ class ROI_Data {
   //void set_time_stamp(int instance, long time_stamp) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):");
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):"+"time_stamp="+time_stamp);
-    time_stamp_curr[instance] = time_stamp;
+    // Check init time stamp.
+    if (!time_stamp_init_done[instance]) {
+      // Set last time stamp to new time stamp - 1.
+      time_stamp_last[instance] = time_stamp - 1;
+      time_stamp_new[instance] = time_stamp;
+      time_stamp_init_done[instance] = true;
+    }
+    else {
+      // Save last time stamp.
+      time_stamp_last[instance] = time_stamp_new[instance];
+      time_stamp_new[instance] = time_stamp;
+    }
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):Exit");
   }
 
@@ -303,6 +317,12 @@ class ROI_Data {
   void detect_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Enter");
 
+    // Check time stamp is changed.
+    if (time_stamp_new[instance] == time_stamp_last[instance]) {
+      // Don't need to process.
+      return;
+    }
+
     ArrayList<ROI_Object_Data> objects_new = new ArrayList<ROI_Object_Data>();
 
     //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size="+objects_new.size());
@@ -315,16 +335,17 @@ class ROI_Data {
     get_objects(
       objects_new,
       points_new[instance],
-      time_stamp_curr[instance],
+      time_stamp_new[instance],
       Regions_handle.get_regions_size_for_index(instance),
       angle_step[instance]);
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):get_objects()");
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
+    SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"init objects_last[instance].size()="+objects_last[instance].size());
 
-    if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":time_stamp_curr[instance]="+time_stamp_curr[instance]);
-    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+")"+":time_stamp_curr[instance]="+time_stamp_curr[instance]);
+    if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":time_stamp_new[instance]="+time_stamp_new[instance]);
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+")"+":time_stamp_new[instance]="+time_stamp_new[instance]);
 
     // Check new objects is come from previous objects.
     for (ROI_Object_Data object_new:objects_new) {
@@ -399,7 +420,7 @@ class ROI_Data {
     //if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     if (PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
-    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
+    SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     // Check disappeared object on previous objects
     for (ROI_Object_Data object_last:objects_last[instance]) {
@@ -432,9 +453,9 @@ class ROI_Data {
         if (object_last.disappeared == false) {
           if (region_index == 0 && time_duration >= ROI_OBJECT_DETECT_TIME_MIN * 2) {
             object_last.detected_time_last[region_index] =
-              time_stamp_curr[instance];
+              time_stamp_new[instance];
             object_last.detected_time_start[region_index] =
-              time_stamp_curr[instance]
+              time_stamp_new[instance]
               -
               ROI_OBJECT_DETECT_TIME_MIN * 2
               -
@@ -455,9 +476,9 @@ class ROI_Data {
           }
           else if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
             object_last.detected_time_last[region_index] =
-              time_stamp_curr[instance];
+              time_stamp_new[instance];
             object_last.detected_time_start[region_index] =
-              time_stamp_curr[instance]
+              time_stamp_new[instance]
               -
               ROI_OBJECT_DETECT_TIME_MIN
               -
@@ -481,13 +502,13 @@ class ROI_Data {
           if (time_duration > 0) {
             time_duration -=
               get_int_diff(
-                  time_stamp_curr[instance],
+                  time_stamp_new[instance],
                   object_last.detected_time_last[region_index]);
             //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",disappeared time_duration="+time_duration);
             object_last.detected_time_last[region_index] =
-              time_stamp_curr[instance];
+              time_stamp_new[instance];
             object_last.detected_time_start[region_index] =
-              time_stamp_curr[instance] - time_duration;
+              time_stamp_new[instance] - time_duration;
             detected_time_total_last_max =
               max(
                 detected_time_total_last_max,
