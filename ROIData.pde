@@ -323,10 +323,11 @@ class ROI_Data {
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"init objects_last[instance].size()="+objects_last[instance].size());
 
+    if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":time_stamp_curr[instance]="+time_stamp_curr[instance]);
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+")"+":time_stamp_curr[instance]="+time_stamp_curr[instance]);
+
     // Check new objects is come from previous objects.
     for (ROI_Object_Data object_new:objects_new) {
-      if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":time_stamp_curr[instance]="+time_stamp_curr[instance]);
-
       /*
       // Check object_new is big enough.
       if (!object_new.big_enough) continue;
@@ -398,6 +399,7 @@ class ROI_Data {
     //if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     if (PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     // Check disappeared object on previous objects
     for (ROI_Object_Data object_last:objects_last[instance]) {
@@ -416,16 +418,42 @@ class ROI_Data {
       boolean add_object_last = false;
       int detected_time_total_last_max = MIN_INT;
       int detected_time_total_start_min = MAX_INT;
+      //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last old detected_time_total="+get_int_diff(object_last.detected_time_total_last, object_last.detected_time_total_start));
+      //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last.disappeared="+object_last.disappeared);
       for (int region_index = 0; region_index < object_last.regions_count; region_index ++) {
         int time_duration =
           get_int_diff(
             object_last.detected_time_last[region_index],
             object_last.detected_time_start[region_index]);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
-        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"object_last time_duration="+time_duration);
+        if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",time_duration="+time_duration);
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",old time_duration="+time_duration);
         /**/
         if (object_last.disappeared == false) {
-          if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
+          if (region_index == 0 && time_duration >= ROI_OBJECT_DETECT_TIME_MIN * 2) {
+            object_last.detected_time_last[region_index] =
+              time_stamp_curr[instance];
+            object_last.detected_time_start[region_index] =
+              time_stamp_curr[instance]
+              -
+              ROI_OBJECT_DETECT_TIME_MIN * 2
+              -
+              ROI_OBJECT_DETECT_KEEP_TIME
+              +
+              1;
+            detected_time_total_last_max =
+              max(
+                detected_time_total_last_max,
+                object_last.detected_time_last[region_index]);
+            detected_time_total_start_min =
+              min(
+                detected_time_total_start_min,
+                object_last.detected_time_start[region_index]);
+            //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",new time_duration="+get_int_diff(object_last.detected_time_last[region_index], object_last.detected_time_start[region_index]));
+            set_disappeared = true;
+            add_object_last = true;
+          }
+          else if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
             object_last.detected_time_last[region_index] =
               time_stamp_curr[instance];
             object_last.detected_time_start[region_index] =
@@ -444,6 +472,7 @@ class ROI_Data {
               min(
                 detected_time_total_start_min,
                 object_last.detected_time_start[region_index]);
+            //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",new time_duration="+get_int_diff(object_last.detected_time_last[region_index], object_last.detected_time_start[region_index]));
             set_disappeared = true;
             add_object_last = true;
           }
@@ -454,6 +483,7 @@ class ROI_Data {
               get_int_diff(
                   time_stamp_curr[instance],
                   object_last.detected_time_last[region_index]);
+            //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",disappeared time_duration="+time_duration);
             object_last.detected_time_last[region_index] =
               time_stamp_curr[instance];
             object_last.detected_time_start[region_index] =
@@ -466,6 +496,7 @@ class ROI_Data {
               min(
                 detected_time_total_start_min,
                 object_last.detected_time_start[region_index]);
+            //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last region_index="+region_index+",new time_duration="+get_int_diff(object_last.detected_time_last[region_index], object_last.detected_time_start[region_index]));
             add_object_last = true;
           }
         }
@@ -476,6 +507,7 @@ class ROI_Data {
         }
         object_last.detected_time_total_last = detected_time_total_last_max;
         object_last.detected_time_total_start = detected_time_total_start_min;
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last new detected_time_total="+get_int_diff(object_last.detected_time_total_last, object_last.detected_time_total_start));
         objects_new.add(object_last);
       }
     } // End of for (ROI_Object_Data object_last:objects_last[instance])
@@ -557,7 +589,10 @@ class ROI_Data {
         boolean region_index_detected_found = false;
         for (int i_1 = 0; i_1 < object.region_indexes.size(); i_1 ++) {
           region_index_detected = object.region_indexes.get(i_1);
-          time_duration_detected = get_int_diff(object.detected_time_last[region_index_detected], object.detected_time_start[region_index_detected]);
+          time_duration_detected =
+            get_int_diff(
+              object.detected_time_last[region_index_detected],
+              object.detected_time_start[region_index_detected]);
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:draw_objects("+instance+")"+":"+i+":time_duration_detected="+time_duration_detected);
 
           // Check object is detected during enough time.
@@ -584,15 +619,15 @@ class ROI_Data {
             if (time_duration_detected < ROI_OBJECT_DETECT_TIME_MIN * 2) {
               continue;
             }
-            //println("time_duration_appeared="+time_duration_appeared);
-            //println("time_duration_detected_total="+time_duration_detected_total);
-            //println("time_duration_detected="+time_duration_detected);
+            //SYSTEM_logger.info("time_duration_appeared="+time_duration_appeared);
+            //SYSTEM_logger.info("time_duration_detected_total="+time_duration_detected_total);
+            //SYSTEM_logger.info("time_duration_detected="+time_duration_detected);
           }
-          //else {
-            //println("time_duration_appeared="+time_duration_appeared);
-            //println("time_duration_detected_total="+time_duration_detected_total);
-            //println("time_duration_detected="+time_duration_detected);
-          //}
+          else {
+            //SYSTEM_logger.info("time_duration_appeared="+time_duration_appeared);
+            //SYSTEM_logger.info("time_duration_detected_total="+time_duration_detected_total);
+            //SYSTEM_logger.info("time_duration_detected="+time_duration_detected);
+          }
         }
 
         detected_objects_new.add(new ROI_Detected_Object_Data(object.mi_center_x, object.mi_center_y, object.mi_diameter));
@@ -1234,10 +1269,10 @@ final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG = false;
 //final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_ERR = true;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_ERR = false;
 
-//final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG = true;
-final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG = false;
-//final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_ERR = true;
-final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_ERR = false;
+//final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG = true;
+final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG = false;
+//final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_ERR = true;
+final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_ERR = false;
 
 class ROI_Detected_Objects {
   public ArrayList<ROI_Detected_Object_Data> objects_data = new ArrayList<ROI_Detected_Object_Data>();
@@ -1263,10 +1298,10 @@ class ROI_Detected_Objects {
   }
 
   boolean are_same(ROI_Detected_Objects other_objects_data) {
-    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":Enter");
+    //if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":Enter");
     // Check objects counts.
     if (this.objects_count != other_objects_data.objects_count) {
-      if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same():objects count diff="+this.objects_count+","+ other_objects_data.objects_count);
+      if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG) println("ROI_Detected_Objects:are_same():objects count diff="+this.objects_count+","+ other_objects_data.objects_count);
       return false;
     }
     for (int i = 0; i < this.objects_data.size(); i ++) {
@@ -1281,7 +1316,7 @@ class ROI_Detected_Objects {
         abs(this_object_data.mi_diameter - other_object_data.mi_diameter);
       // Check diameter diff of two object_data.
       if (object_diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
-        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects diameter diff="+(object_diff));
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects diameter diff="+(object_diff));
         return false;
       }
 
@@ -1294,11 +1329,11 @@ class ROI_Detected_Objects {
           other_object_data.mi_center_y);
       // Check distance of two object_data.
       if (object_diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
-        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects distance="+object_diff);
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects distance="+object_diff);
         return false;
       }
     }
-    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":same!");
+    //if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":same!");
     return true;
   }
 }
