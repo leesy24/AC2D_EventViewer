@@ -1,8 +1,8 @@
 //static color C_VERSION_DATE_TEXT = 0xFFFFFFFF; // Black
 static color C_VERSION_DATE_TEXT = 0xFF000000; // White
 
-final static String VERSION_DATE_VERSION_STR = "1.00.16";
-final static String VERSION_DATE_DATE_STR = "2018-08-24";
+final static String VERSION_DATE_VERSION_STR = "1.00.17";
+final static String VERSION_DATE_DATE_STR = "2018-08-27";
 
 static String VERSION_DATE_VERSION_STR_live;
 static int VERSION_DATE_VERSION_x;
@@ -10,9 +10,9 @@ static int VERSION_DATE_DATE_x;
 
 void Version_Date_setup()
 {
-  println("Version for:" + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);
+  println("Version for " + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);
   SYSTEM_logger.info("");
-  SYSTEM_logger.info("Version for:" + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);
+  SYSTEM_logger.info("Version for " + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);
 
   textSize(FONT_HEIGHT);
   VERSION_DATE_VERSION_STR_live = "Ver. for " + VERSION_DATE_VERSION_STR;
