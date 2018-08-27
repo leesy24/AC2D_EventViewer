@@ -304,6 +304,7 @@ class ROI_Data {
     objects_last[instance].clear();
     detected_objects_last[instance].clear();
     detected_objects_are_same[instance] = false;
+    time_stamp_init_done[instance] = false;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
   }
 
@@ -340,7 +341,7 @@ class ROI_Data {
       angle_step[instance]);
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):get_objects()");
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
-    SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"init objects_last[instance].size()="+objects_last[instance].size());
 
@@ -420,7 +421,7 @@ class ROI_Data {
     //if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     if (PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
-    SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"after objects_last[instance].size()="+objects_last[instance].size());
 
     // Check disappeared object on previous objects
     for (ROI_Object_Data object_last:objects_last[instance]) {
