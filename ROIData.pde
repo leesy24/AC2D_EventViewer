@@ -324,6 +324,8 @@ class ROI_Data {
       return;
     }
 
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+")"+":time_stamp_new[instance]="+time_stamp_new[instance]);
+
     ArrayList<ROI_Object_Data> objects_new = new ArrayList<ROI_Object_Data>();
 
     //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size="+objects_new.size());
@@ -344,6 +346,7 @@ class ROI_Data {
     //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"init objects_last[instance].size()="+objects_last[instance].size());
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"init objects_last[instance].size()="+objects_last[instance].size());
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":time_stamp_new[instance]="+time_stamp_new[instance]);
     //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+")"+":time_stamp_new[instance]="+time_stamp_new[instance]);
@@ -357,6 +360,8 @@ class ROI_Data {
 
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects_new.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
 
+      //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_new.mi_diameter="+object_new.mi_diameter);
+
       int distance_min = MAX_INT;
       ROI_Object_Data object_last_distance_min = null;
       // Find nearest object of objects_last.
@@ -367,6 +372,10 @@ class ROI_Data {
             object_new.mi_center_y,
             object_last.mi_center_x,
             object_last.mi_center_y);
+
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last.mi_diameter="+object_last.mi_diameter);
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"distance               ="+distance);
+
         // Check distance of object_new and object_last is near.
         if (distance > ((object_new.mi_diameter + ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX * 2) / 2)
             ||
@@ -384,6 +393,8 @@ class ROI_Data {
       } // End of for (ROI_Object_Data object_last:objects_last[instance])
 
       if (distance_min != MAX_INT) {
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"object_last_distance_min.mi_diameter="+object_last_distance_min.mi_diameter);
+        //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"distance_min                        ="+distance_min);
         if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+")"+":object_new.appeared_time_start ="+object_new.appeared_time_start+":object_new="+object_new);
 
         if (object_last_distance_min.appeared_time_start < object_new.appeared_time_start) {
@@ -534,6 +545,7 @@ class ROI_Data {
       }
     } // End of for (ROI_Object_Data object_last:objects_last[instance])
 
+    //SYSTEM_logger.info("ROI_Data:detect_objects("+instance+"):"+"end objects_new.size()="+objects_new.size());
     // Save objects_new to objects_last.
     objects_last[instance] = objects_new;
     //Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 2");
@@ -554,10 +566,17 @@ class ROI_Data {
 
   void draw_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Enter");
+
+    // Check have objects to draw.
+    if (objects_last[instance].size() == 0) {
+      return;
+    }
+
     boolean no_mark = false;
 
     // Check no mark region has too big object.
     for (ROI_Object_Data object:objects_last[instance]) {
+      //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":object.big_enough="+object.big_enough+":object.mi_diameter="+object.mi_diameter);
       // Check object is big enough.
       if (!object.big_enough) continue;
       // Check object is big enough for no mark.
@@ -567,6 +586,7 @@ class ROI_Data {
       int region_index = -1;
       for (int i = 0; i < object.region_indexes.size(); i ++) {
         region_index = object.region_indexes.get(i);
+        //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":"+i+":region_index="+region_index+":time_duration="+get_int_diff(object.detected_time_last[region_index], object.detected_time_start[region_index]));
         if (Regions_handle.get_region_no_mark_big(instance, region_index))
         {
           no_mark_big = true;
@@ -577,6 +597,7 @@ class ROI_Data {
       if (no_mark_big) {
         // Check object is detected during enough time.
         int time_duration = get_int_diff(object.detected_time_last[region_index], object.detected_time_start[region_index]);
+        //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":time_duration="+time_duration);
         if (time_duration < ROI_OBJECT_DETECT_TIME_MIN) {
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
           continue;
@@ -588,6 +609,7 @@ class ROI_Data {
         break;
       }
     }
+    //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":no_mark="+no_mark);
 
     ROI_Detected_Objects detected_objects_new = new ROI_Detected_Objects();
     Regions_handle.reset_regions_has_object(instance);
