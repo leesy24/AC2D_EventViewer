@@ -45,6 +45,7 @@ UI_System_Config_TF_ControlListener UI_System_Config_tf_control_listener;
 //UI_System_Config_CP5_CallbackListener UI_System_Config_cp5_callback_listener;
 
 static enum UI_System_Config_tf_enum {
+  MACHINE_NAME,
   SYSTEM_PASSWORD,
   FRAME_RATE,
   PS_DATA_SAVE_ALWAYS_DURATION,
@@ -175,8 +176,26 @@ void UI_System_Config_update()
   x = UI_System_Config_x_base + FONT_HEIGHT;
   y = UI_System_Config_y_base + TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN * 2 + FONT_HEIGHT;
 
-  // SYSTEM_PASSWORD
+  // MACHINE_NAME
   //y += h + TEXT_MARGIN;
+  str = "MACHINE_NAME";
+  w = int(textWidth(str));
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_MACHINE_NAME");
+  tl_handle
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .setText(str)
+    .setPosition(x, y)
+    .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
+    .setHeight(h)
+    ;
+  tl_handle.get()
+      .setSize(FONT_HEIGHT)
+      ;
+
+  // SYSTEM_PASSWORD
+  y += h + TEXT_MARGIN;
   str = "SYSTEM_PASSWORD(4-digits)";
   w = int(textWidth(str));
   w_max = max(w_max, w);
@@ -415,8 +434,46 @@ void UI_System_Config_update()
 
   w_max = MIN_INT;
 
-  // SYSTEM_PASSWORD input
+  // MACHINE_NAME input
   //y += h + TEXT_MARGIN;
+  str = MACHINE_NAME;
+  if (str.equals(""))
+    w = int(FONT_HEIGHT * 1.5 * 5 / 2 + TEXT_MARGIN * 2);
+  else
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_MACHINE_NAME_input");
+  tf_handle
+    .setId(UI_System_Config_tf_enum.MACHINE_NAME.ordinal())
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .addListener(UI_System_Config_tf_control_listener)
+    .setPosition(x, y).setSize(w, h)
+    //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+    .setAutoClear(false)
+    .setColorBackground( C_UI_SYSTEM_CONFIG_FILL_NORMAL )
+    .setColorForeground( C_UI_SYSTEM_CONFIG_BORDER_NORMAL )
+    .setColorActive( C_UI_SYSTEM_CONFIG_BORDER_ACTIVE )
+    .setColorValueLabel( C_UI_SYSTEM_CONFIG_TEXT )
+    .setColorCursor( C_UI_SYSTEM_CONFIG_CURSOR )
+    .setCaptionLabel("")
+    .setText(str)
+    ;
+  //println("tf.getText() = ", tf.getText());
+  tf_handle.getValueLabel()
+      //.setFont(UI_System_Config_cf)
+      .setSize(FONT_HEIGHT)
+      //.toUpperCase(false)
+      ;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginTop = -1;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginLeft = 1;
+
+  // SYSTEM_PASSWORD input
+  y += h + TEXT_MARGIN;
   str = SYSTEM_PASSWORD;
   if (str.equals(""))
     w = int(FONT_HEIGHT * 1.5 * 5 / 2 + TEXT_MARGIN * 2);
@@ -1131,6 +1188,14 @@ void UI_System_Config_input_update()
 
     str = tf_handle.getText();
     switch (tf_enum) {
+      case MACHINE_NAME:
+        if (str.equals(MACHINE_NAME)) {
+          break;
+        }
+        MACHINE_NAME = str;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated MACHINE_NAME="+MACHINE_NAME+",tf_enum="+tf_enum);
+        break;
       case SYSTEM_PASSWORD:
         if (str.length() == 0) {
           //SYSTEM_PASSWORD_disabled = true;

@@ -38,6 +38,8 @@ void Const_setup()
       EVENT_VERSION_NUMBER = variable.getString("Value");
     else if (name.equals("VERSION_DATE_DATE_STR"))
       EVENT_RELEASE_DATE = variable.getString("Value");
+    else if (name.equals("MACHINE_NAME"))
+      MACHINE_NAME = variable.getString("Value");
     else if (name.equals("SYSTEM_PASSWORD"))
       SYSTEM_PASSWORD = variable.getString("Value");
     else if(name.equals("SYSTEM_UI_TIMEOUT"))

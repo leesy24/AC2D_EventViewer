@@ -1,6 +1,7 @@
 Name,Value,Comment
 VERSION_DATE_VERSION_STR,Unknown,Application version number
 VERSION_DATE_DATE_STR,Unknown,Application release date
+MACHINE_NAME,,Machine name. It will display at the top center of screen.
 SYSTEM_PASSWORD,0000,4-Digits system password to configure settings
 SYSTEM_UI_TIMEOUT,60,Timeout value for UI displaying in seconds
 FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec

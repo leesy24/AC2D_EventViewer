@@ -23,6 +23,8 @@ final static String TITLE_COMPANY = "DASAN InfoTek";
 final static String TITLE_PRODUCT = "2D Anti-Collision Event Viewer";
 String Title;
 
+static String MACHINE_NAME = "MACHINE";
+
 static int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
 static int FRAME_TIME = 50; // Frame time will calculated from FRAME_RATE.
 
@@ -250,6 +252,11 @@ void Notice_Messages_draw()
     strings.add("V"+EVENT_VERSION_NUMBER+"@"+EVENT_RELEASE_DATE);
   }
 
+  if (!MACHINE_NAME.equals(""))
+  {
+    strings.add(MACHINE_NAME);
+  }
+
   if (Bubble_Info_enabled)
   {
     strings.add("Bubble Info enabled!");
@@ -265,11 +272,11 @@ void Notice_Messages_draw()
   fill(gray);
   stroke(gray);
   textSize(FONT_HEIGHT);
-  textAlign(LEFT, BASELINE);
+  textAlign(LEFT, TOP);
   int i = 0;
   for (String str:strings)
   {
-    text(str, SCREEN_width / 2 - textWidth(str) / 2, TEXT_MARGIN + FONT_HEIGHT + i * FONT_HEIGHT);
+    text(str, SCREEN_width / 2 - textWidth(str) / 2, i * FONT_HEIGHT);
     i ++;
   }
 }
