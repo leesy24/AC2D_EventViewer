@@ -43,7 +43,7 @@ C_UI_BUTTONS_TEXT,FFFFFFFF,Button text color. Color data format is AARRGGBB
 C_UI_BUTTONS_BOX,FFFFFFFF,Button box color. Color data format is AARRGGBB
 W_UI_BUTTONS_BOX,1,Button box weight.
 C_PS_DATA_LINE,FF0000FF,Scan points line default color. Color data format is AARRGGBB
-C_PS_DATA_POINT,FFFF0000,Scan point default color. Color data format is AARRGGBB
+C_PS_DATA_POINT,FF0000FF,Scan point default color. Color data format is AARRGGBB
 W_PS_DATA_LINE,1,Scan line and point default weight.
 C_PS_DATA_RECT_FILL,C0080808,Scan info box fill color. Color data format is AARRGGBB
 C_PS_DATA_RECT_STROKE,FFFFFFFF,Scan info box border color. Color data format is AARRGGBB

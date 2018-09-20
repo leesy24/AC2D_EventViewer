@@ -27,8 +27,8 @@ final static boolean PRINT_PS_DATA_PARSE_ERR = false;
 final static boolean PRINT_PS_DATA_DRAW_DBG = false;
 
 static color C_PS_DATA_ERR_TEXT = #000000; // Black
-static color C_PS_DATA_LINE = #0000FF; // Blue
-static color C_PS_DATA_POINT = #FF0000; // Red
+static color C_PS_DATA_LINE = 0xFF0000FF; // Blue
+static color C_PS_DATA_POINT = 0xFF0000FF; // Blue
 static int W_PS_DATA_LINE = 1;
 static color C_PS_DATA_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
 static color C_PS_DATA_RECT_STROKE = #000000; // Black
@@ -1024,7 +1024,9 @@ class PS_Data {
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         */
-        if (pulse_width >= PS_DATA_PULSE_WIDTH_MIN) {
+        if ((data_content[instance] != 4 && pulse_width >= PS_DATA_PULSE_WIDTH_MIN)
+            ||
+            data_content[instance] == 4) {
           ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
           if (region_indexes.size() > 0) {
             ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
