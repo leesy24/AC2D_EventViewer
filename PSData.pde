@@ -337,6 +337,7 @@ class PS_Data {
   int[][] scr_y = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] pulse_width = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   color[][] pulse_width_color = new color[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
+  int[] pulse_width_low_count = new int[PS_INSTANCE_MAX];
   String[] parse_err_str = new String[PS_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_INSTANCE_MAX];
@@ -805,6 +806,8 @@ class PS_Data {
     i = i + 4;
 */  
 
+    pulse_width_low_count[instance] = 0;
+
     // Clear parse error string and count
     parse_err_str[instance] = null;
     parse_err_cnt[instance] = 0;
@@ -844,6 +847,9 @@ class PS_Data {
       strings.add("System status:" + system_status[instance]);
       strings.add("Data content:" + data_content[instance]);
       strings.add("Number of points:" + number_of_points[instance]);
+      if (data_content[instance] != 4) {
+        strings.add("Skip points(<"+PS_DATA_PULSE_WIDTH_MIN+"):" + pulse_width_low_count[instance]);
+      }
     }
     strings.add("Time-out:" + ((SYSTEM_UI_TIMEOUT * 1000 + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
 
@@ -1038,6 +1044,9 @@ class PS_Data {
           }
         }
         else {
+          if ((data_content[instance] != 4 && pulse_width < PS_DATA_PULSE_WIDTH_MIN)) {
+            pulse_width_low_count[instance] ++;
+          }
           point_is_contains_curr = false;
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+")"+":x="+mi_x+",y="+mi_y+",pw="+pulse_width);
         }
