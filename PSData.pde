@@ -51,6 +51,8 @@ final static int PS_DATA_POINT_WEIGHT = 3;
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
 
+static int PS_DATA_PULSE_WIDTH_THRESHOLD = 4096;
+
 final static int PS_DATA_INTERFACES_ERR_COUNT_MAX = 6; // 60 seconds = 1 minute
 
 final static int PS_Interface_FILE = 1;
@@ -848,7 +850,7 @@ class PS_Data {
       strings.add("Data content:" + data_content[instance]);
       strings.add("Number of points:" + number_of_points[instance]);
       if (data_content[instance] != 4) {
-        strings.add("Skip points(<"+PS_DATA_PULSE_WIDTH_MIN+"):" + pulse_width_low_count[instance]);
+        strings.add("Skip points(<"+PS_DATA_PULSE_WIDTH_THRESHOLD+"):" + pulse_width_low_count[instance]);
       }
     }
     strings.add("Time-out:" + ((SYSTEM_UI_TIMEOUT * 1000 + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
@@ -972,7 +974,6 @@ class PS_Data {
     boolean point_is_contains_prev = false;
     color point_color_prev = C_PS_DATA_POINT;
     color line_color = C_PS_DATA_LINE;
-    final int point_line_color_HSB_max_const = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN;
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):Enter");
 
@@ -1030,7 +1031,7 @@ class PS_Data {
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         */
-        if ((data_content[instance] != 4 && pulse_width >= PS_DATA_PULSE_WIDTH_MIN)
+        if ((data_content[instance] != 4 && pulse_width >= PS_DATA_PULSE_WIDTH_THRESHOLD)
             ||
             data_content[instance] == 4) {
           ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
@@ -1044,7 +1045,7 @@ class PS_Data {
           }
         }
         else {
-          if ((data_content[instance] != 4 && pulse_width < PS_DATA_PULSE_WIDTH_MIN)) {
+          if ((data_content[instance] != 4 && pulse_width < PS_DATA_PULSE_WIDTH_THRESHOLD)) {
             pulse_width_low_count[instance] ++;
           }
           point_is_contains_curr = false;

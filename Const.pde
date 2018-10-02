@@ -46,6 +46,8 @@ void Const_setup()
       SYSTEM_UI_TIMEOUT = variable.getInt("Value");
     else if(name.equals("FRAME_RATE"))
       FRAME_RATE = variable.getInt("Value");
+    else if (name.equals("PS_DATA_PULSE_WIDTH_THRESHOLD"))
+      PS_DATA_PULSE_WIDTH_THRESHOLD = variable.getInt("Value");
     else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
       PS_DATA_SAVE_ALWAYS_DURATION = variable.getInt("Value");
     else if (name.equals("PS_DATA_SAVE_EVENTS_DURATION_DEFAULT"))

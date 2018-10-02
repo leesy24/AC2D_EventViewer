@@ -48,6 +48,7 @@ static enum UI_System_Config_tf_enum {
   MACHINE_NAME,
   SYSTEM_PASSWORD,
   FRAME_RATE,
+  PS_DATA_PULSE_WIDTH_THRESHOLD,
   PS_DATA_SAVE_ALWAYS_DURATION,
   PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,
   PS_DATA_SAVE_EVENTS_DURATION_LIMIT,
@@ -219,6 +220,24 @@ void UI_System_Config_update()
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_FRAME_RATE");
+  tl_handle
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .setText(str)
+    .setPosition(x, y)
+    .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
+    .setHeight(h)
+    ;
+  tl_handle.get()
+      .setSize(FONT_HEIGHT)
+      ;
+
+  // PS_DATA_PULSE_WIDTH_THRESHOLD
+  y += h + TEXT_MARGIN;
+  str = "PS_DATA_PULSE_WIDTH_THRESHOLD("+PS_DATA_PULSE_WIDTH_MIN+"~"+PS_DATA_PULSE_WIDTH_MAX+")";
+  w = int(textWidth(str));
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_PS_DATA_PULSE_WIDTH_THRESHOLD");
   tl_handle
     //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
@@ -519,6 +538,41 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_FRAME_RATE_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.FRAME_RATE.ordinal())
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .addListener(UI_System_Config_tf_control_listener)
+    .setPosition(x, y).setSize(w, h)
+    //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+    .setAutoClear(false)
+    .setColorBackground( C_UI_SYSTEM_CONFIG_FILL_NORMAL )
+    .setColorForeground( C_UI_SYSTEM_CONFIG_BORDER_NORMAL )
+    .setColorActive( C_UI_SYSTEM_CONFIG_BORDER_ACTIVE )
+    .setColorValueLabel( C_UI_SYSTEM_CONFIG_TEXT )
+    .setColorCursor( C_UI_SYSTEM_CONFIG_CURSOR )
+    .setCaptionLabel("")
+    .setText(str)
+    ;
+  //println("tf.getText() = ", tf.getText());
+  tf_handle.getValueLabel()
+      //.setFont(UI_System_Config_cf)
+      .setSize(FONT_HEIGHT)
+      //.toUpperCase(false)
+      ;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginTop = -1;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginLeft = 1;
+
+  // PS_DATA_PULSE_WIDTH_THRESHOLD input
+  y += h + TEXT_MARGIN;
+  str = String.valueOf(PS_DATA_PULSE_WIDTH_THRESHOLD);
+  w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_PS_DATA_PULSE_WIDTH_THRESHOLD_input");
+  tf_handle
+    .setId(UI_System_Config_tf_enum.PS_DATA_PULSE_WIDTH_THRESHOLD.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
     .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
@@ -1225,6 +1279,20 @@ void UI_System_Config_input_update()
         FRAME_RATE = val;
         updated = true;
         if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated FRAME_RATE="+FRAME_RATE+",tf_enum="+tf_enum);
+        break;
+      case PS_DATA_PULSE_WIDTH_THRESHOLD:
+        try {
+          val = int(Float.parseFloat(str.trim()));
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == PS_DATA_PULSE_WIDTH_THRESHOLD) {
+          break;
+        }
+        PS_DATA_PULSE_WIDTH_THRESHOLD = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_PULSE_WIDTH_THRESHOLD="+PS_DATA_PULSE_WIDTH_THRESHOLD+",tf_enum="+tf_enum);
         break;
       case PS_DATA_SAVE_ALWAYS_DURATION:
         try {

@@ -5,6 +5,7 @@ MACHINE_NAME,,Machine name. It will display at the top center of screen.
 SYSTEM_PASSWORD,0000,4-Digits system password to configure settings
 SYSTEM_UI_TIMEOUT,60,Timeout value for UI displaying in seconds
 FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
+PS_DATA_PULSE_WIDTH_THRESHOLD,4096,Point pulse width thresh hold value to skip data.
 PS_DATA_SAVE_ALWAYS_DURATION,1,Time duration of received PS data keep in hours to save on disk.
 PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,2000,Default time duration of event PS data keep in milli-seconds to save on disk.
 PS_DATA_SAVE_EVENTS_DURATION_LIMIT,30000,Limit time duration of event PS data keep in milli-seconds to save on disk.
@@ -14,12 +15,12 @@ ROI_OBJECT_DETECT_DIAMETER_MIN,2000,Minimum diameter of object to detect the obj
 ROI_OBJECT_DETECT_TIME_MIN,1000,Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)
 ROI_OBJECT_DETECT_KEEP_TIME,2000,Keeping time for disappearance object to detect object ROI later.(unit is milli-seconds)
 ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
-Relay_Module_UART_port_name,NA,UART port name of Relay module.
+Relay_Module_UART_port_name,COM2,UART port name of Relay module.
 Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
 Relay_Module_UART_parity,N,UART parity of Relay module.
 Relay_Module_UART_data_bits,8,UART baud rate of Relay module.
 Relay_Module_UART_stop_bits,1.0,UART stop bits of Relay module.
-RELAY_MODULE_UART_REPLY_REQUEST_ENABLED,false,Reply data request of Relay moudle version 1.10.
+RELAY_MODULE_UART_REPLY_REQUEST_ENABLED,true,Reply data request of Relay moudle version 1.10.
 C_RELAY_MODULE_INDICATOR_OFF_FILL,40000000,Color of fill of relay indicator box. Color data format is AARRGGBB
 C_RELAY_MODULE_INDICATOR_OFF_STROKE,FF404040,Color of stroke of relay indicator box and text. Color data format is AARRGGBB
 SCREEN_BORDER_WIDTH,4,Border width of window of Windows. default = 8
