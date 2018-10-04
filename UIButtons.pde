@@ -321,7 +321,9 @@ void UI_Buttons_mouse_pressed()
   {
     for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
     {
-      if (buttons_group.mouse_pressed()) {
+      if (buttons_group.is_focused()) {
+        // Disable mouse drag function when issue button action.
+        UI_Buttons_mouse_drag_base_instance = -1;
         switch (buttons_group.get_action())
         {
           case ZOOM_PLUSE:
@@ -680,9 +682,9 @@ class Buttons_Group {
     return action;
   }
 
-  public boolean mouse_pressed() {
+  public boolean is_focused() {
     for (Button_Instance button:buttons) {
-      if (button.mouse_pressed()) {
+      if (button.is_focused()) {
         this.action = button.get_action();
         return true;
       }
@@ -746,15 +748,8 @@ class Button_Instance {
     return action;
   }
 
-  public boolean mouse_pressed() {
-    if (focused) {
-      pressed = true;
-    }
-    else
-    {
-      pressed = false;
-    }
-    return pressed;
+  public boolean is_focused() {
+    return focused;
   }
 
   public void mouse_moved() {
