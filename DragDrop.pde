@@ -76,9 +76,10 @@ void dropEvent(DropEvent theDropEvent) {
             println("event_full_name="+event_full_name);
             println("file_name="+file_name);
             //println("sub file_name="+file_name.substring(file_name.length() - 4, file_name.length()));
-            if (file_name.length() != 19
+            if (!file_name.substring(file_name.length() - 4, file_name.length()).equals(".dat")
                 ||
-                !file_name.substring(file_name.length() - 4, file_name.length()).equals(".dat")) {
+                !file_name.substring(1, 2).equals("_")
+                ) {
               continue;
             }
             //println("sub file_name="+file_name.substring(0, 1));
@@ -92,26 +93,8 @@ void dropEvent(DropEvent theDropEvent) {
             if (instance_file == -1) {
               continue;
             }
-            String dir_name = event_full_name_handle.getParentFile().getName();
-            println("dir_name="+dir_name);
-            if (dir_name.length() != 21
-                ||
-                !dir_name.substring(dir_name.length() - 2, dir_name.length() - 1).equals("_")) {
-              continue;
-            }
-            //println("sub dir_name="+dir_name.substring(dir_name.length() - 1, dir_name.length()));
-            int instance_dir = -1;
-            try {
-              instance_dir = Integer.parseInt(dir_name.substring(dir_name.length() - 1, dir_name.length()));
-            }
-            catch (NumberFormatException e) {
-            }
-            //println("instance_dir="+instance_dir);
-            if (instance_dir == -1 || instance_dir != instance_file) {
-              continue;
-            }
             for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
-              if (i == instance_dir) {
+              if (i == instance_file) {
                 PS_Interface[i] = PS_Interface_FILE;
                 FILE_name[i] = event_full_name;
               }
