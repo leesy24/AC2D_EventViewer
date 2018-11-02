@@ -331,6 +331,7 @@ class PS_Data {
   int[] system_status = new int[PS_INSTANCE_MAX];
   int[] data_content = new int[PS_INSTANCE_MAX];
   int[] number_of_points = new int[PS_INSTANCE_MAX];
+  int[] number_of_points_error = new int[PS_INSTANCE_MAX];
   int[][] distances = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   float[][] point_angle_degree = new float[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] mi_x = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
@@ -375,6 +376,7 @@ class PS_Data {
       system_status[i] = 0;
       data_content[i] = 0;
       number_of_points[i] = 0;
+      number_of_points_error[i] = 0;
       parse_err_str[i] = null;
       parse_err_cnt[i] = 0;
       load_take_time[i] = 0;
@@ -660,6 +662,8 @@ class PS_Data {
 */
     i = i + 4;
 
+    number_of_points_error[instance] = 0;
+
     for (int j = 0; j < number_of_points[instance]; j++) {
       // Get Distance
       // : units are 1/10 mm.
@@ -682,6 +686,7 @@ class PS_Data {
         mi_y[instance][j] = MIN_INT;
         scr_x[instance][j] = MIN_INT;
         scr_y[instance][j] = MIN_INT;
+        number_of_points_error[instance] ++;
       }
       else {
         mi_x[instance][j] = int(distances[instance][j] * cos(radians(point_angle_degree[instance][j])));
@@ -848,7 +853,7 @@ class PS_Data {
       strings.add("System temp.:" + system_temperature[instance] + "°C");
       strings.add("System status:" + system_status[instance]);
       strings.add("Data content:" + data_content[instance]);
-      strings.add("Number of points:" + number_of_points[instance]);
+      strings.add("Num. points:" + number_of_points[instance] + "(" + number_of_points_error[instance] + ")");
       if (data_content[instance] != 4) {
         strings.add("Skip points(<"+PS_DATA_PULSE_WIDTH_THRESHOLD+"):" + pulse_width_low_count[instance]);
       }
