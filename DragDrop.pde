@@ -76,24 +76,24 @@ void dropEvent(DropEvent theDropEvent) {
             println("event_full_name="+event_full_name);
             println("file_name="+file_name);
             //println("sub file_name="+file_name.substring(file_name.length() - 4, file_name.length()));
-            if (!file_name.substring(file_name.length() - 4, file_name.length()).equals(".dat")
-                ||
-                !file_name.substring(1, 2).equals("_")
+            if (!file_name.substring(
+                  file_name.length() - 4, file_name.length()).equals(".dat")
+                //||
+                //!file_name.substring(1, 2).equals("_")
                 ) {
               continue;
             }
             //println("sub file_name="+file_name.substring(0, 1));
             int instance_file = -1;
-            try {
-              instance_file = Integer.parseInt(file_name.substring(0, 1));
-            }
-            catch (NumberFormatException e) {
+            if (file_name.substring(1, 2).equals("_")) {
+              try {
+                instance_file = Integer.parseInt(file_name.substring(0, 1));
+              }
+              catch (NumberFormatException e) {
+              }
             }
             //println("instance_file="+instance_file);
-            //if (instance_file == -1) {
-            //  continue;
-            //}
-            if (instance_file >= PS_INSTANCE_MAX) {
+            if (instance_file == -1 || instance_file >= PS_INSTANCE_MAX) {
               instance_file = 0;
             }
             for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
