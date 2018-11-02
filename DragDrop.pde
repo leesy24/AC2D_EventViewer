@@ -90,8 +90,11 @@ void dropEvent(DropEvent theDropEvent) {
             catch (NumberFormatException e) {
             }
             //println("instance_file="+instance_file);
-            if (instance_file == -1) {
-              continue;
+            //if (instance_file == -1) {
+            //  continue;
+            //}
+            if (instance_file >= PS_INSTANCE_MAX) {
+              instance_file = 0;
             }
             for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
               if (i == instance_file) {
