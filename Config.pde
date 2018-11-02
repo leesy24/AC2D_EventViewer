@@ -37,8 +37,15 @@ void Config_setup()
     if(table == null)
     {
       if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup()"+":"+i+":loadTable() return null! "+file_full_name);
-      //Config_create();
-      continue;
+
+      file_full_name = sketchPath() + "\\data\\" + CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
+      table = loadTable(file_full_name, "header");
+
+      // Check loadTable failed.
+      if(table == null) {
+        if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup()"+":"+i+":loadTable() return null! "+file_full_name);
+        continue;
+      }
     }
 
     for (TableRow variable : table.rows())

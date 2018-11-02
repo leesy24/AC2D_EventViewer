@@ -1,0 +1,33 @@
+Name,Value,Comment
+PS_Interface,NONE,PS Interface via File or COM or UDP or SN.
+ZOOM_FACTOR,1200,Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)
+ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+MIRROR_ENABLE,true,Mirroring or not.(true or false)
+#,,
+#Possible ROTATE_FACTOR and MIRROR_ENABLE options for sensor direction,,
+#for top right,,
+#ROTATE_FACTOR,45.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+#MIRROR_ENABLE,false,Mirroring or not.(true or false)
+#for bottom right,,
+#ROTATE_FACTOR,225.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+#MIRROR_ENABLE,true,Mirroring or not.(true or false)
+#for top down,,
+#ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+#MIRROR_ENABLE,true,Mirroring or not.(true or false)
+#for bottom up,,
+#ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+#MIRROR_ENABLE,false,Mirroring or not.(true or false)
+#,,
+ANGLE_ADJUST,0,Angle adjust of draws for 1000 to -1000 in centi-degree
+SCREEN_OFFSET_X,0,X Offset of screen to draw.
+SCREEN_OFFSET_Y,0,Y Offset of screen to draw.
+FILE_name,,File name of PS Interface File.
+UART_port_name,COM1,UART port name of PS Interface UART.
+UART_baud_rate,115200,UART baud rate of PS Interface UART.
+UART_parity,N,UART parity of PS Interface UART.
+UART_data_bits,8,UART baud rate of PS Interface UART.
+UART_stop_bits,1.0,UART stop bits of PS Interface UART.
+UDP_remote_ip,10.0.15.19,UDP remote IP of PS Interface UDP.
+UDP_remote_port,1024,UDP remote port of PS Interface UDP.
+UDP_local_port,1026,UDP local port of PS Interface UDP.
+SN_serial_number,1519,Serial Number of PS Interface SN.

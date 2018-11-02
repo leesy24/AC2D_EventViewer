@@ -1,0 +1,5 @@
+Region_Name,Region_Priority,Relay_Index,No_Mark_Big,Rect_Field_X,Rect_Field_Y,Rect_Width,Rect_Height,Rect_First_Color,Rect_Color,Rect_Weight,Rect_Dashed,Marker_Stroke_Color,Marker_Stroke_Weight,Marker_Fill_Color,:Priority 0 is most high priority,X/Y/Width/Height unit is cm. 100cm = 1meter,Color format is AARRGGBB(ex. FF000000 = opaque Black)
+#Fault,0,0,FALSE,100,0,900,700,00FF0000,80FF0000,3,0,FFFF0000,5,40FF0000,,,
+#Alert,1,1,FALSE,100,0,1700,700,00FFFF00,80FFFF00,3,0,FFFFFF00,5,40FFFF00,,,
+#No Marking,2,-1,TRUE,100,300,800,600,80FF0000,80FF0000,3,10,FFFF0000,5,40FF0000,,,
+Monitor,3,-1,FALSE,0,0,8000,8000,00808080,80808080,3,0,FF808080,1,20808080,,,

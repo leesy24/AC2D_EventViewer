@@ -2,9 +2,13 @@ import garciadelcastillo.dashedlines.*;
 
 //final static boolean PRINT_REGIONS_ALL_DBG = true; 
 final static boolean PRINT_REGIONS_ALL_DBG = false;
+//final static boolean PRINT_REGIONS_ALL_ERR = true; 
+final static boolean PRINT_REGIONS_ALL_ERR = false;
 
 //final static boolean PRINT_REGIONS_SETUP_DBG = true; 
 final static boolean PRINT_REGIONS_SETUP_DBG = false;
+//final static boolean PRINT_REGIONS_SETUP_ERR = true; 
+final static boolean PRINT_REGIONS_SETUP_ERR = false;
 
 //final static boolean PRINT_REGIONS_UPDATE_DBG = true; 
 final static boolean PRINT_REGIONS_UPDATE_DBG = false;
@@ -74,7 +78,15 @@ class Regions {
       // Check loadTable failed.
       if(table == null) {
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":loadTable() return null! "+file_full_name);
-        continue;
+
+        file_full_name = sketchPath() + "\\data\\" + REGIONS_FILE_NAME + "_" + instance + REGIONS_FILE_EXT;
+        table = loadTable(file_full_name, "header");
+
+        // Check loadTable failed.
+        if(table == null) {
+          if (PRINT_REGIONS_ALL_ERR || PRINT_REGIONS_SETUP_ERR) println("Regions:settings():"+instance+":loadTable() return null! "+file_full_name);
+          continue;
+        }
       }
 
       for (TableRow variable:table.rows()) {
