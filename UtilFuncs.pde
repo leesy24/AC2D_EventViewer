@@ -573,3 +573,71 @@ void set_logger()
     e.printStackTrace();
   }  
 }
+
+import java.io.ByteArrayOutputStream;  
+import java.util.zip.DataFormatException;  
+import java.util.zip.Deflater;  
+import java.util.zip.Inflater;  
+
+static byte[] compress(final byte[] data)
+{
+  final Deflater deflater = new Deflater();
+  deflater.setLevel(Deflater.BEST_COMPRESSION);
+  deflater.setInput(data);
+  deflater.finish();
+
+  final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+  final byte[] buffer = new byte[1024*8];
+  try
+  {
+    while (!deflater.finished())
+    {
+      final int count = deflater.deflate(buffer); // returns the generated
+                                                  // code...
+      // index
+      outputStream.write(buffer, 0, count);
+    }
+    outputStream.close();
+  }
+  catch (final IOException e)
+  {
+    e.printStackTrace();
+    //log.log(Level.SEVERE, e.getMessage(), e);
+    return data;
+  }
+
+  return outputStream.toByteArray();
+}
+
+static byte[] decompress(final byte[] data)
+{
+  final Inflater inflater = new Inflater();
+  inflater.setInput(data);
+
+  final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+  final byte[] buffer = new byte[1024*8];
+  try
+  {
+    while (!inflater.finished())
+    {
+      final int count = inflater.inflate(buffer);
+
+      outputStream.write(buffer, 0, count);
+    }
+    outputStream.close();
+  }
+  catch (final DataFormatException e)
+  {
+    e.printStackTrace();
+    //log.log(Level.SEVERE, e.getMessage(), e);
+    return data;
+  }
+  catch (final IOException e)
+  {
+    e.printStackTrace();
+    //log.log(Level.SEVERE, e.getMessage(), e);
+    return data;
+  }
+
+  return outputStream.toByteArray();
+}
